@@ -279,8 +279,8 @@ class level{
 
 PushyIsland p = new PushyIsland();
 
-//p.drawLevel(p.generatelevel(1));
-//p.drawLevel(p.generatelevel(2));
-//p.drawLevel(p.generatelevel(3));
-//p.drawLevel(p.generatelevel(4));
-//p.drawLevel(p.generatelevel(5));
+p.drawLevel(p.generatelevel(1))
+p.drawLevel(p.generatelevel(2))
+p.drawLevel(p.generatelevel(3))
+p.drawLevel(p.generatelevel(4))
+p.drawLevel(p.generatelevel(5))
