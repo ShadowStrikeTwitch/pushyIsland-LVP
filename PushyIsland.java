@@ -14,16 +14,16 @@ public class PushyIsland{
         run();
     }
 
-    void startGame(){
-        gameRunning = true;
-        currentLevel = 1;
-        run();
-    }
-
     void run(){
         if (gameRunning) {
             drawLevel(generatelevel(currentLevel));
         } else showTitleScreen();
+    }
+
+    void startGame(){
+        gameRunning = true;
+        currentLevel = 1;
+        run();
     }
 
     void endGame(){ // Spiel 'beenden'
@@ -32,8 +32,7 @@ public class PushyIsland{
     }
 
     void showTitleScreen(){ // Titelbildschirm
-        Turtle t = new Turtle(1100,700);        
-
+        Turtle t = new Turtle(1100,700);
         t.moveTo(550,190).color(0,100,100);
         for (int i = 0; i < 360; i++) {
             t.forward(2).right(1);
@@ -65,31 +64,30 @@ public class PushyIsland{
         t.text("Spiel Starten mit p.startGame").moveTo(550, 600).text("Spiel Verlassen mit p.endGame");
     }
 
-    void clearScreen(){ // Bildschirm löschen
-        Clerk.clear();
-        Clerk.markdown("PushyIsland - remake");
-    }
-
+    
     level generatelevel(int currentLevel){ // Einzelne Level generieren
         level l = new level(currentLevel);
         System.out.println("[PushyIsland] Level " + l.level + " wird geladen." + System.lineSeparator());
         switch (currentLevel) {
             case 1:
-                l.loadWorld(l.level1);
+                l.loadWorld(l.level1); // Level 1 laden
                 break;
             case 2:
-                l.loadWorld(l.level2);
+                l.loadWorld(l.level2); // Level 2 laden
                 break;
             case 3:
-                l.loadWorld(l.level3);
+                l.loadWorld(l.level3); // Level 3 laden 
                 break;
             case 4:
-                l.loadWorld(l.level4);
+                l.loadWorld(l.level4); // Level 4 laden
                 break;
             case 5:
-                l.loadWorld(l.level5);
+                l.loadWorld(l.level5); // Level 5 laden
                 break;
-            default:
+            case 6:
+                l.loadWorld(l.level5); // Level 6 laden
+                break;
+            default: // Wenn kein Level mehr gefunden wird, wird das Spiel beendet
                 currentLevel = 0;
                 clearScreen();
                 break;
@@ -101,12 +99,14 @@ public class PushyIsland{
         }
         return l;
     }
-    
-    String drawLevel(level l){ //Level anzeigen
-        Turtle t = new Turtle(1100,700);
-        StringBuilder s = new StringBuilder();
-        int tx = 50, ty = 50;
 
+    void clearScreen(){ // Bildschirm löschen
+        Clerk.clear();
+        Clerk.markdown("PushyIsland - remake");
+    }
+
+    void drawGrid(Turtle t){
+        int tx = 50, ty = 50;
         for (int i = 0; i < 14; i++) { // Gitter zeichnen
             t.moveTo(0, ty * i);
             t.forward(1100);
@@ -116,9 +116,14 @@ public class PushyIsland{
             t.moveTo(tx * i, 0);
             t.forward(700);
         }
+    }
+    
+    void drawLevel(level l){ //Level anzeigen
+        StringBuilder s = new StringBuilder();
+        int tx = 50, ty = 50;
+        Turtle t = new Turtle(1100,700);
+        drawGrid(t);
         t.left(180).textSize = 50;
-        tx = 50;
-        ty = 50;
         for (int i = 0; i < l.world.length; i++) {
             for (int j = 0; j < l.world[i].length; j++) {
                 switch (l.world[i][j]) {
@@ -152,7 +157,6 @@ public class PushyIsland{
                 }
             }
         }
-        return "[PushyIsland] Level " + l.level;
     }
 
     void showWinScreen(){ 
@@ -250,6 +254,22 @@ class level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8, 1, 0, 0, 4, 1, 1, 1, 3, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 4, 1, 1, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 2, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+    
+    int[][] level6 = {
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
