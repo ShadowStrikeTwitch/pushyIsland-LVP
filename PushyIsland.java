@@ -32,37 +32,37 @@ public class PushyIsland{
     }
 
     void showTitleScreen(){ // Titelbildschirm
-        Turtle t = new Turtle(1000,1000);        
+        Turtle t = new Turtle(1100,700);        
 
-        t.moveTo(500,342).color(0,100,100);
+        t.moveTo(550,190).color(0,100,100);
         for (int i = 0; i < 360; i++) {
             t.forward(2).right(1);
         }
-        t.moveTo(560,420);
+        t.moveTo(600,300);
         for (int i = 0; i < 360; i++) {
             t.forward(0.5).right(1);
         }
-        t.moveTo(470,420);
+        t.moveTo(510,290);
         for (int i = 0; i < 360; i++) {
             t.forward(0.75).right(1);
         }
-        t.moveTo(480,450);
+        t.moveTo(525,340);
         for (int i = 0; i < 360; i++) {
             t.forward(0.1).right(1);
         }
-        t.moveTo(550,442);
+        t.moveTo(600,330);
         for (int i = 0; i < 360; i++) {
             t.forward(0.1).right(1);
         }
 
         t.left(90).color(0,200,200);
         t.textSize = 85;
-        t.moveTo(500, 100).text("PushyIsland - remake");
+        t.moveTo(550, 100).text("PushyIsland - remake");
         t.textSize = 20;
         t.moveTo(750, 130).color(0,255,200).text("by Leon Sahl");
         t.textSize = 50;
-        t.color(150,100,255).moveTo(500, 700);
-        t.text("Spiel Starten mit p.startGame").moveTo(500, 800).text("Spiel Verlassen mit p.endGame");
+        t.color(150,100,255).moveTo(550, 500);
+        t.text("Spiel Starten mit p.startGame").moveTo(550, 600).text("Spiel Verlassen mit p.endGame");
     }
 
     void clearScreen(){ // Bildschirm löschen
