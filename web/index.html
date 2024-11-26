@@ -3,11 +3,21 @@
   <head>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
     <meta charset="UTF-8">
-    <link href="web/favicon.ico" rel="icon" type="image/x-icon" />
-    <title>Clerk in Java Prototype</title>
+    <link href="web/puchy.png" rel="icon" type="image/x-icon" />
+    <title>PushyIsland - remake</title>
     <link rel="stylesheet" href="web/clerk.css"/>
     <link rel="stylesheet" href="views/Markdown/vs.css"/>
     <script src="web/script.js" defer></script>
+
+    <script>
+      document.addEventListener("keydown", (event) => {
+          const key = event.key.toLowerCase(); // 'w', 'a', 's', 'd'
+          if (["w", "a", "s", "d"].includes(key)) {
+              console.log(`Taste ${key.toUpperCase()} gedrückt`);
+          }
+      });
+  </script>
+
   </head>
   <body>
     <div id="events" class="persistent"></div>
