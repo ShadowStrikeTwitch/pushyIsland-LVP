@@ -92,7 +92,7 @@ public class PushyIsland{
                 break;
         }
         try {
-            Thread.sleep(500);
+            Thread.sleep(500); //"Lade" Zeit
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -103,24 +103,10 @@ public class PushyIsland{
         Clerk.clear();
         Clerk.markdown("PushyIsland - remake");
     }
-
-    void drawGrid(Turtle t){
-        int tx = 50, ty = 50;
-        for (int i = 0; i < 14; i++) { // Gitter zeichnen
-            t.moveTo(0, ty * i);
-            t.forward(1100);
-        }
-        t.right(90);
-        for (int i = 0; i < 24; i++) { // Gitter zeichnen
-            t.moveTo(tx * i, 0);
-            t.forward(700);
-        }
-    }
     
     void drawLevel(level l){ //Level anzeigen
         StringBuilder s = new StringBuilder();
         int tx = 50, ty = 50;
-        drawGrid(t);
         t.reset();
         t.left(90).textSize = 50;
         for (int i = 0; i < l.world.length; i++) {
@@ -129,36 +115,36 @@ public class PushyIsland{
                     case 0:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 42).text("🟦");  // oder: ♒︎
                         break;
-                    case 1:
+                        case 1:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 42).text("🟨");
                         break;
-                    case 2:
+                        case 2:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 44).text("🗻");
                         break;
-                    case 3:
+                        case 3:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 42).text("🌴");
                         break;
-                    case 4:
+                        case 4:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 42).text("📦");
                         break;
-                    case 5:
+                        case 5:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 42).text("🟩");
                         break;
-                    case 7:
+                        case 7:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 42).text("😋");
                         break;
-                    case 8:
+                        case 8:
                         t.color(0,0,205).moveTo(tx * j + 25, ty * i + 43).text("🏠");
                         break;
-                    default:
+                        default:
                         t.moveTo(tx * j + 25, ty * i + 42).text("❌");
                         break;
+                    }
                 }
             }
         }
-    }
 
-    void showWinScreen(){ 
+    void levelPassed(){
         System.out.println("[PushyIsland] Level geschafft." + System.lineSeparator());
         currentLevel++;
         run();
@@ -171,12 +157,12 @@ class level{
 
     level(int level){
         this.level = level;
-        world = new int[14][22];
+        world = new int[14][22]; // Leeres Level erstellen
     }
 
     int[][] loadWorld(int[][] world){
         this.world = world;
-        return world;
+        return world; // Fertige Level laden
     }
 
     int[][] level1 = {
@@ -283,3 +269,5 @@ PushyIsland p = new PushyIsland();
 //p.drawLevel(p.generatelevel(3))
 //p.drawLevel(p.generatelevel(4))
 //p.drawLevel(p.generatelevel(5))
+
+//Spieler Moves merken (HighScore (Anzahl Moves)) einbauen
