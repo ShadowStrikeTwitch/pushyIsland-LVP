@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 public class PushyIsland{
     boolean gameRunning;
     int currentLevel;
+    Turtle t = new Turtle(1100,700);
 
     public PushyIsland(){
         gameRunning = false;
@@ -32,7 +33,6 @@ public class PushyIsland{
     }
 
     void showTitleScreen(){ // Titelbildschirm
-        Turtle t = new Turtle(1100,700);
         t.moveTo(550,190).color(0,100,100);
         for (int i = 0; i < 360; i++) {
             t.forward(2).right(1);
@@ -64,7 +64,6 @@ public class PushyIsland{
         t.text("Spiel Starten mit p.startGame").moveTo(550, 600).text("Spiel Verlassen mit p.endGame");
     }
 
-    
     level generatelevel(int currentLevel){ // Einzelne Level generieren
         level l = new level(currentLevel);
         System.out.println("[PushyIsland] Level " + l.level + " wird geladen." + System.lineSeparator());
@@ -121,9 +120,9 @@ public class PushyIsland{
     void drawLevel(level l){ //Level anzeigen
         StringBuilder s = new StringBuilder();
         int tx = 50, ty = 50;
-        Turtle t = new Turtle(1100,700);
         drawGrid(t);
-        t.left(180).textSize = 50;
+        t.reset();
+        t.left(90).textSize = 50;
         for (int i = 0; i < l.world.length; i++) {
             for (int j = 0; j < l.world[i].length; j++) {
                 switch (l.world[i][j]) {
@@ -279,8 +278,8 @@ class level{
 
 PushyIsland p = new PushyIsland();
 
-p.drawLevel(p.generatelevel(1))
-p.drawLevel(p.generatelevel(2))
-p.drawLevel(p.generatelevel(3))
-p.drawLevel(p.generatelevel(4))
-p.drawLevel(p.generatelevel(5))
+//p.drawLevel(p.generatelevel(1))
+//p.drawLevel(p.generatelevel(2))
+//p.drawLevel(p.generatelevel(3))
+//p.drawLevel(p.generatelevel(4))
+//p.drawLevel(p.generatelevel(5))
