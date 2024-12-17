@@ -25,18 +25,22 @@ public class PushyIsland{
     }
     
     void startGame(){ // Spiel starten
-        gameRunning = true;
-        currentLevel = 1;
-        run();
+        if (!gameRunning) {
+            gameRunning = true;
+            currentLevel = 1;
+            run();    
+        } else System.out.println("[PushyIsland] Spiel läuft bereits." + System.lineSeparator());
     }
     
     void endGame(){ // Spiel 'beenden'
+    gameRunning = false;
+    currentLevel = 0;
     System.out.println("[PushyIsland] Spiel beendet." + System.lineSeparator());
     Clerk.clear();
     }
 
     void showTitleScreen(){ // Titelbildschirm
-        t.moveTo(550,190).color(0,100,100);
+        t.moveTo(550,190).color(33, 53, 85);
         for (int i = 0; i < 360; i++) {
             t.forward(2).right(1);
         }
@@ -57,13 +61,13 @@ public class PushyIsland{
             t.forward(0.1).right(1);
         }
 
-        t.left(90).color(0,200,200);
+        t.left(90).color(62, 88, 121);
         t.textSize = 85;
         t.moveTo(550, 100).text("PushyIsland - remake");
-        t.textSize = 20;
-        t.moveTo(750, 130).color(0,255,200).text("by Leon Sahl");
+        t.textSize = 30;
+        t.moveTo(770, 130).color(33, 53, 85).text("by Leon Sahl");
         t.textSize = 50;
-        t.color(150,100,255).moveTo(550, 500);
+        t.color(62, 88, 121).moveTo(550, 500);
         t.text("Spiel Starten mit p.startGame").moveTo(550, 600).text("Spiel Verlassen mit p.endGame");
     }
 
@@ -90,8 +94,8 @@ public class PushyIsland{
             l.loadWorld(l.level5); // Level 6 laden
             break;
             default: // Wenn kein Level mehr gefunden wird, wird das Spiel beendet
-            currentLevel = 0;
-            clearScreen();
+            System.out.println("[PushyIsland] Es gibt keine weiteren Level, herzlichen Glückwunsch.");
+            endGame();
             break;
         }
         try {
