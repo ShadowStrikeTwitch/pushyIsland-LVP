@@ -1,16 +1,15 @@
-Clerk.clear();
-
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 
 public class PushyIsland{
     boolean gameRunning;
     int currentLevel;
     Turtle t = new Turtle(1100,700);
-    
     
     public PushyIsland(){
         gameRunning = false;
@@ -68,7 +67,7 @@ public class PushyIsland{
         t.moveTo(770, 130).color(33, 53, 85).text("by Leon Sahl");
         t.textSize = 50;
         t.color(62, 88, 121).moveTo(550, 500);
-        t.text("Spiel Starten mit p.startGame").moveTo(550, 600).text("Spiel Verlassen mit p.endGame");
+        t.text("Starten mit SPACEBAR oder p.startGame()").moveTo(550, 600).text("Verlassen mit ESC oder p.endGame");
     }
 
     Level generatelevel(int currentLevel){ // Einzelne Level generieren
@@ -114,8 +113,8 @@ public class PushyIsland{
     void drawLevel(Level l) { // Level anzeigen
         int tx = 50, ty = 50;
         t.reset().left(90).textSize = 50;
-        for (int i = 0; i < l.world.length; i++) {
-            for (int j = 0; j < l.world[i].length; j++) {
+        IntStream.range(0, l.world.length).forEach(i -> {
+            IntStream.range(0, l.world[i].length).forEach(j -> {
                 int x = tx * j + 25, y = ty * i + 42;
                 String emoji = switch (l.world[i][j]) {
                     case 0 -> "🟦"; // Wasser
@@ -134,56 +133,58 @@ public class PushyIsland{
                     default -> "❌"; // Fehler
                 };
                 t.color(0, 0, 205).moveTo(x, y).text(emoji);
-            }
-        }
+            });
+        });
     }
 
-        void levelPassed(){
-            System.out.println("[PushyIsland] Level geschafft." + System.lineSeparator());
-            currentLevel++;
-            run();
+    void levelPassed(){
+        System.out.println("[PushyIsland] Level geschafft." + System.lineSeparator());
+        currentLevel++;
+        run();
+    }
+
+    public String findPlayer(Level l) {
+        for (int i = 0; i < l.world.length; i++) {
+            for (int j = 0; j < l.world[i].length; j++) {
+                if (l.world[i][j] == 7) return i + "," + j;
+            }
         }
+        return "Player not found.";
+    }
 
-        //String findPlayer(){ // Neuer Ansatz!
-        //    for (int i = 0; i < l.world.length; i++) {
-        //        for (int j = 0; j < l.world.length; j++) {
-        //            if (l.world[i][j] == 5) return i + " , " + j;
-        //        }
-        //    }
-        //    return "Player not found.";
-        //}
-
-        boolean rules(){
-
-
-
-            return false;
-        }
+    boolean rules(){
+        return false;
+    }
         
-        Move move(Move m){
-            if (gameRunning) {
-                switch (m) {
-                    case UP:
-                    
+    public Move move(Move m) {
+        if (gameRunning) {
+            switch (m) {
+                case UP:
+                    // Bewegung nach oben
+                    System.out.println("[PushyIsland] Move UP");
                     break;
-                    case DOWN:
-                    
+                case DOWN:
+                    // Bewegung nach unten
+                    System.out.println("[PushyIsland] Move DOWN");
                     break;
-                    case LEFT:
-                    
+                case LEFT:
+                    // Bewegung nach links
+                    System.out.println("[PushyIsland] Move LEFT");
                     break;
-                    case RIGHT:
-                    
+                case RIGHT:
+                    // Bewegung nach rechts
+                    System.out.println("[PushyIsland] Move RIGHT");
                     break;
                 default:
-                break;
+                    break;
             }
         }
         return m;
     }
 }
 
-enum Move{
+enum Move {
+    SPACE,
     UP,
     DOWN,
     LEFT,
@@ -300,13 +301,5 @@ class Level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 }
-
-PushyIsland p = new PushyIsland();
-
-//p.drawLevel(p.generatelevel(1))
-//p.drawLevel(p.generatelevel(2))
-//p.drawLevel(p.generatelevel(3))
-//p.drawLevel(p.generatelevel(4))
-//p.drawLevel(p.generatelevel(5))
 
 //Spieler Moves merken (HighScore (Anzahl Moves)) einbauen
