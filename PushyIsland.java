@@ -10,6 +10,8 @@ public class PushyIsland{
     boolean gameRunning;
     int currentLevel;
     Turtle t = new Turtle(1100,700);
+    Level l = new Level(currentLevel);
+    String player_dir = "";
     
     public PushyIsland(){
         gameRunning = false;
@@ -71,8 +73,7 @@ public class PushyIsland{
     }
 
     Level generatelevel(int currentLevel){ // Einzelne Level generieren
-        Level l = new Level(currentLevel);
-        System.out.println("[PushyIsland] Level " + l.level + " wird geladen." + System.lineSeparator());
+        System.out.println("[PushyIsland] Level " + currentLevel + " wird geladen." + System.lineSeparator());
         switch (currentLevel) {
             case 1:
             l.loadWorld(l.level1); // Level 1 laden
@@ -93,7 +94,7 @@ public class PushyIsland{
             l.loadWorld(l.level5); // Level 6 laden
             break;
             default: // Wenn kein Level mehr gefunden wird, wird das Spiel beendet
-            System.out.println("[PushyIsland] Es gibt keine weiteren Level, herzlichen Glückwunsch.");
+            System.out.println("[PushyIsland] Es gibt keine weiteren Level, herzlichen Glueckwunsch.");
             endGame();
             break;
         }
@@ -152,7 +153,59 @@ public class PushyIsland{
         return "Player not found.";
     }
 
+    public int possitionObjectFinder(Level l, String pos){
+        //"Y,X"
+        int devider = pos.lastIndexOf(",");
+        int y = Integer.parseInt(pos.substring(0, devider));
+        int x = Integer.parseInt(pos.substring(devider + 1, pos.length()));
+        return l.world[y][x];
+    }
+
     boolean rules(){
+        String player_pos = findPlayer(l);
+        //String object_pos = 
+        int object;
+        int devider = player_pos.lastIndexOf(",");
+        int player_posY = Integer.parseInt(player_pos.substring(0, devider));
+        int player_posX = Integer.parseInt(player_pos.substring(devider + 1, player_pos.length()));
+
+        //int object_posY = Integer.parseInt(object_pos.substring(0, devider));
+        //int object_posX = Integer.parseInt(object_pos.substring(devider + 1, object_pos.length()));
+
+
+        switch (player_dir) {
+            case "up":
+            object = possitionObjectFinder(l, ((player_posY-1) + "," + player_posX));
+            break;
+            case "down":
+            object = possitionObjectFinder(l, ((player_posY+1) + "," + player_posX));
+            break;
+            case "left":
+            object = possitionObjectFinder(l, (player_posY + "," + (player_posX-1)));
+            break;
+            case "right":
+            object = possitionObjectFinder(l, (player_posY + "," + (player_posX+1)));
+            break;
+            default:
+                break;
+        }
+//
+        //switch (object) {
+        //    case 1:
+        //        l.world[player_posX][player_posY] = object;
+        //        //l.world[object_posX][object_posY] = 7;
+        //        break;
+        //
+        //    default:
+        //        break;
+        //}
+//
+        //Spieler läuft auf leeres Feld:
+        //Spieler will auf Wasser:
+        //Spieler möchte auf eine Erhöhung:
+        //Spieler schiebt eine Box:
+        //Spieler schiebt ein Seestern:
+        //Spieler trifft auf das Haus:
         return false;
     }
         
@@ -161,23 +214,28 @@ public class PushyIsland{
             switch (m) {
                 case UP:
                     // Bewegung nach oben
+                    player_dir = "up";
                     System.out.println("[PushyIsland] Move UP");
                     break;
                 case DOWN:
                     // Bewegung nach unten
+                    player_dir = "down";
                     System.out.println("[PushyIsland] Move DOWN");
                     break;
                 case LEFT:
                     // Bewegung nach links
+                    player_dir = "left";
                     System.out.println("[PushyIsland] Move LEFT");
                     break;
                 case RIGHT:
                     // Bewegung nach rechts
+                    player_dir = "right";
                     System.out.println("[PushyIsland] Move RIGHT");
                     break;
                 default:
                     break;
             }
+            rules();
         }
         return m;
     }
