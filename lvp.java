@@ -106,7 +106,7 @@ class LiveView {
                 return;
             }
             final String path = exchange.getRequestURI().getPath().equals("/") ? index
-                    : "." + exchange.getRequestURI().getPath();
+            : "." + exchange.getRequestURI().getPath();
             try (final InputStream stream = new FileInputStream(path)) {
                 final byte[] bytes = stream.readAllBytes();
                 exchange.getResponseHeaders().add("Content-Type", Files.probeContentType(Path.of(path)) + "; charset=utf-8");
@@ -116,10 +116,51 @@ class LiveView {
             } finally {
                 exchange.close();
             }
+
+            //Rute für Move befehle
+            server.createContext("/execute", this::handleExecute);
         });
 
         server.setExecutor(Executors.newFixedThreadPool(5));
         server.start();
+    }
+
+    private void handleExecute(HttpExchange exchange) throws IOException {
+        if ("POST".equals(exchange.getRequestMethod())) {
+            InputStream is = exchange.getRequestBody();
+            String commandJson = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            
+            // Einfaches Parsen des JSON-Strings
+            String command = commandJson.split(":")[1].replaceAll("[\"{}]", "").trim();
+            switch (command) {
+                case "space":
+                    p.startGame();
+                    break;
+                case "escape":
+                    p.endGame();
+                    break;
+                case "w":
+                    p.move(Move.UP);
+                    break;
+                case "a":
+                    p.move(Move.LEFT);
+                    break;
+                case "s":
+                    p.move(Move.DOWN);
+                    break;
+                case "d":
+                    p.move(Move.RIGHT);
+                    break;
+                default:
+                    break;
+            }
+            String response = "Command executed: " + command;
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            exchange.getResponseBody().write(response.getBytes());
+            exchange.getResponseBody().close();
+        } else {
+            exchange.sendResponseHeaders(405, -1); // 405 Method Not Allowed
+        }
     }
 
     void sendServerEvent(SSEType sseType, String data) {
@@ -228,8 +269,5 @@ interface Clerk {
 /open views/Turtle/Turtle.java
 /open views/Markdown/Marked.java
 /open views/Markdown/MarkdownIt.java
-/open views/TicTacToe/TicTacToe.java
-/open views/Dot/Dot.java
-/open views/Input/Slider.java
 
-// LiveView view = Clerk.view();
+/open PushyIsland.java

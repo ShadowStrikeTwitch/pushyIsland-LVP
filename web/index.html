@@ -12,14 +12,24 @@
     <script>
       document.addEventListener("keydown", (event) => {
           const key = event.key.toLowerCase(); // 'w', 'a', 's', 'd'
-          if (["w", "a", "s", "d"].includes(key)) {
-              console.log(`Taste ${key.toUpperCase()} gedrückt`);
+          const code = event.code; // 'Space', 'Escape'
+          if (["w", "a", "s", "d"].includes(key) || code === "Space" || code === "Escape") {
+              const command = code === "Space" ? "space" : (code === "Escape" ? "escape" : key);
+              fetch('/execute', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ command: command })
+              })
+              .then(response => response.text())
+              .then(data => console.log(data))
+              .catch(error => console.error('Error:', error));
           }
       });
-  </script>
-
+    </script>
   </head>
-  <body>
+  <body style="background-color: #D8C4B6;">
     <div id="events" class="persistent"></div>
     <div id="loadMessage" class="load-message persistent"> loading… </div>
   </body>
