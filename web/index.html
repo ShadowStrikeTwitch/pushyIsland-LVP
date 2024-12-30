@@ -13,7 +13,7 @@
       document.addEventListener("keydown", (event) => {
           const key = event.key.toLowerCase(); // 'w', 'a', 's', 'd'
           const code = event.code; // 'Space', 'Escape'
-          if (["w", "a", "s", "d"].includes(key) || code === "Space" || code === "Escape") {
+          if (["w", "a", "s", "d", "r"].includes(key) || code === "Space" || code === "Escape") {
               const command = code === "Space" ? "space" : (code === "Escape" ? "escape" : key);
               fetch('/execute', {
                   method: 'POST',

@@ -151,6 +151,9 @@ class LiveView {
                 case "d":
                     p.move(Move.RIGHT);
                     break;
+                case "r":
+                    p.resetLevel();
+                    break;
                 default:
                     break;
             }
