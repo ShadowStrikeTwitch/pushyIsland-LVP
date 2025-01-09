@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class PushyIsland{
     boolean gameRunning;
     int currentLevel, moveCount;
-    int[] moveStatics = new int[6];
+    int[] moveStatics = new int[11];
     Turtle t = new Turtle(1100,700);
     Level l = new Level();
     String player_dir = "";
@@ -113,6 +113,9 @@ public class PushyIsland{
             case 10:
                 newLevel.loadWorld(newLevel.level10); // Level 6 laden
                 break;
+            case 11:
+                newLevel.loadWorld(newLevel.generate().world); // Random Level generieren
+                break;
             default: // Wenn kein Level mehr gefunden wird, wird das Spiel beendet
                 System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch.");
                 IntStream.of(moveStatics).forEach(System.out::println);
@@ -169,9 +172,10 @@ public class PushyIsland{
     void levelPassed(){
         if (gameRunning) {
             System.out.println("[PushyIsland] Level wurde mit " + moveCount +  " Moves geschafft. \n");
+            if (currentLevel <= 10){
             moveStatics[currentLevel - 1] = moveCount; // Move Counter speichern
             moveCount = 0;                             // Move Counter zurücksetzen
-            currentLevel++;                            // Derzeitiges Level erhöhen
+            currentLevel++;}                           // Derzeitiges Level erhöhen
             run();
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
@@ -344,6 +348,48 @@ class Level{
     Level(){
         world = new int[14][22]; // Leeres Level erstellen
     }
+    
+    Level generate(){
+        Random rand = new Random();
+        Level l = new Level();
+
+        // Spieler Random positionieren und Land herum
+        int playerX = rand.nextInt(20) + 1;
+        int playerY = rand.nextInt(12) + 1;
+        for (int i = playerY - 1; i < playerY + 2; i++) {
+            for (int j = playerX - 1; j < playerX + 2; j++) {
+                l.world[i][j] = 1;
+            }
+        } l.world[playerY][playerX] = 7;
+        
+        // Ein Haus platzieren
+        int houseX = rand.nextInt(20) + 1;
+        int houseY = rand.nextInt(12) + 1;
+        for (int i = houseY - 1; i < houseY + 2; i++) {
+            for (int j = houseX - 1; j < houseX + 2; j++) {
+                if (l.world[i][j] != 7) {
+                    l.world[i][j] = 1;
+                }
+            }
+        } l.world[houseY][houseX] = 8;
+        
+        // Random Muscheln platzieren und Land drumherum
+        int shellCount = rand.nextInt(5) + 1;
+        for (int i = 0; i < shellCount; i++) {
+            int shellX = rand.nextInt(20) + 1;
+            int shellY = rand.nextInt(12) + 1;
+            if (l.world[shellY][shellX] == 0) {
+                for (int j = shellY - 1; j < shellY + 2; j++) {
+                    for (int k = shellX - 1; k < shellX + 2; k++) {
+                        if (l.world[j][k] != 7) {
+                            l.world[j][k] = 1;
+                        }
+                    }
+                } l.world[shellY][shellX] = 6;
+            }
+        }
+        return l;
+    }
 
     int[][] loadWorld(int[][] world){
         this.world = world;
@@ -511,4 +557,6 @@ class Level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 }
 
-//Spieler Moves merken (HighScore (Anzahl Moves)) einbauen
+//Spieler Moves merken (HighScore (Anzahl Moves)) einbauen check
+//Level generieren
+//Level speichern?

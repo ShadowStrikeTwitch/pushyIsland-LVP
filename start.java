@@ -12,5 +12,8 @@ PushyIsland p = new PushyIsland();
 
 //Debugging
 p.startGame();
-p.currentLevel = 6;
+p.currentLevel = 10;
 p.levelPassed();
+//p.drawLevel(p.l.generate());
+
+//Level generieren 
