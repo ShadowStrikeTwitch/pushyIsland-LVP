@@ -29,6 +29,7 @@ Das verschieben ermöglicht ihm das vorranschreiten im Level und letzendlich das
 Bei der Programmierung habe ich darauf geachtet von welcher Richtung die Box verschoben wird,
 ebenfalls musste ich darauf achten, dass sich vor der Box kein Hinderniss befindet,
 dies erfrage ich mithilfe der getObjectPossition Methode.
+
 ```java 
 
 ```
