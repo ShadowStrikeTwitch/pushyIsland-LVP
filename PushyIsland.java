@@ -13,7 +13,7 @@ public class PushyIsland{
     int[] moveStatics = new int[11];
     Turtle t = new Turtle(1100,700);
     Level l = new Level();
-    String player_dir = "";
+    String playerDirection = "";
     
     public PushyIsland(){
         gameRunning = false;
@@ -102,25 +102,22 @@ public class PushyIsland{
                 newLevel.loadWorld(newLevel.level6); // Level 6 laden
                 break;
             case 7:
-                newLevel.loadWorld(newLevel.level7); // Level 6 laden
+                newLevel.loadWorld(newLevel.level7); // Level 7 laden
                 break;
             case 8:
-                newLevel.loadWorld(newLevel.level8); // Level 6 laden
+                newLevel.loadWorld(newLevel.level8); // Level 8 laden
                 break;
             case 9:
-                newLevel.loadWorld(newLevel.level9); // Level 6 laden
+                newLevel.loadWorld(newLevel.level9); // Level 9 laden
                 break;
             case 10:
-                newLevel.loadWorld(newLevel.level10); // Level 6 laden
+                newLevel.loadWorld(newLevel.level10); // Level 10 laden
                 break;
-            case 11:
-                newLevel.loadWorld(newLevel.generate().world); // Random Level generieren
-                break;
-            default: // Wenn kein Level mehr gefunden wird, wird das Spiel beendet
+            default: // Sollten alle Standart-Level gespielt worden seien
                 System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch.");
-                IntStream.of(moveStatics).forEach(System.out::println);
-                endGame();
-                return null;
+                IntStream.of(moveStatics).forEach(System.out::println); // Scoreboard ausgeben
+                newLevel.loadWorld(newLevel.generate().world); // Random Level generieren
+                
         }
         try {
             Thread.sleep(500); // "Lade" Zeit
@@ -130,11 +127,11 @@ public class PushyIsland{
         return newLevel;
     }
 
-    void drawLevel(Level l) { // Level anzeigen
+    void drawLevel(Level l) { // Das Level anzeigen
         int tx = 50, ty = 50;
         t.reset().left(90).textSize = 50;
-        IntStream.range(0, l.world.length).forEach(i -> {
-            IntStream.range(0, l.world[i].length).forEach(j -> {
+        IntStream.range(0, l.world.length).forEach(i -> { // Level durchlaufen und bestimmte -
+            IntStream.range(0, l.world[i].length).forEach(j -> { // Zeichen in der View aufmalen.
             int x = tx * j + 25, y = ty * i + 42;
             String emoji = switch (l.world[i][j]) {
                 case 0 -> "🟦";                   // Wasser
@@ -152,11 +149,11 @@ public class PushyIsland{
             });
         });
         t.textSize = 30;
-        t.moveTo(70, 40).color(0, 0, 0).text("Level: " + currentLevel);
-        t.moveTo(80, 80).text("Moves: " + moveCount);
+        t.moveTo(70, 40).color(0, 0, 0).text("Level: " + currentLevel); // Aktuelles Level anzeigen
+        t.moveTo(80, 80).text("Moves: " + moveCount); // Anzahl Moves anzeigen
     }
     
-    void clearScreen(){ // Bildschirm leeren
+    void clearScreen(){ // Den Bildschirm leeren
         Clerk.clear();
     }
 
@@ -169,7 +166,7 @@ public class PushyIsland{
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
 
-    void levelPassed(){
+    void levelPassed(){ // Methode welche nach Levelabschluss ausgeführt wird
         if (gameRunning) {
             System.out.println("[PushyIsland] Level wurde mit " + moveCount +  " Moves geschafft. \n");
             if (currentLevel <= 10){
@@ -199,20 +196,20 @@ public class PushyIsland{
         return shellCount;
     }
 
-    public int possitionObjectFinder(Level l, String pos){ // Methode um das Objekt an einer bestimmten Position zu finden
+    public int getObjectFromPosition(Level l, String pos){ // Methode um das Objekt an einer bestimmten Position zu finden
         int devider = pos.lastIndexOf(",");
         int y = Integer.parseInt(pos.substring(0, devider));
         int x = Integer.parseInt(pos.substring(devider + 1, pos.length()));
         return l.world[y][x];
     }
 
-    boolean rules() { // Regeln des Spiels
+    boolean rules() { // Die Grundregeln des Spiels
         String player_pos = findPlayer(l);
         int devider = player_pos.lastIndexOf(",");
         int player_posY = Integer.parseInt(player_pos.substring(0, devider));
         int player_posX = Integer.parseInt(player_pos.substring(devider + 1, player_pos.length()));
     
-        int[] objectPos = getObjectPosition(player_posY, player_posX);
+        int[] objectPos = getPossitionFromObject(player_posY, player_posX);
         int object_posY = objectPos[0];
         int object_posX = objectPos[1];
         int object = objectPos[2];
@@ -243,27 +240,27 @@ public class PushyIsland{
         return true;
     }
     
-    int[] getObjectPosition(int player_posY, int player_posX) { // Position des Objekts finden
+    int[] getPossitionFromObject(int player_posY, int player_posX) { // Position des Objekts finden
         int object_posY = 0, object_posX = 0, object = 0;
     
-        switch (player_dir) {
+        switch (playerDirection) {
             case "up":
-                object = possitionObjectFinder(l, ((player_posY - 1) + "," + player_posX));
+                object = getObjectFromPosition(l, ((player_posY - 1) + "," + player_posX));
                 object_posY = player_posY - 1;
                 object_posX = player_posX;
                 break;
             case "down":
-                object = possitionObjectFinder(l, ((player_posY + 1) + "," + player_posX));
+                object = getObjectFromPosition(l, ((player_posY + 1) + "," + player_posX));
                 object_posY = player_posY + 1;
                 object_posX = player_posX;
                 break;
             case "left":
-                object = possitionObjectFinder(l, (player_posY + "," + (player_posX - 1)));
+                object = getObjectFromPosition(l, (player_posY + "," + (player_posX - 1)));
                 object_posY = player_posY;
                 object_posX = player_posX - 1;
                 break;
             case "right":
-                object = possitionObjectFinder(l, (player_posY + "," + (player_posX + 1)));
+                object = getObjectFromPosition(l, (player_posY + "," + (player_posX + 1)));
                 object_posY = player_posY;
                 object_posX = player_posX + 1;
                 break;
@@ -282,7 +279,7 @@ public class PushyIsland{
     boolean moveBox(int player_posY, int player_posX, int object_posY, int object_posX) { // Box bewegen
         int newBoxPosY = object_posY, newBoxPosX = object_posX;
     
-        switch (player_dir) {
+        switch (playerDirection) {
             case "up":
                 newBoxPosY = object_posY - 1;
                 break;
@@ -316,16 +313,16 @@ public class PushyIsland{
         if (gameRunning) {
             switch (m) {
                 case UP:
-                    player_dir = "up";    // Bewegung nach oben
+                    playerDirection = "up";    // Bewegung nach oben
                     break;
                 case DOWN:
-                    player_dir = "down";  // Bewegung nach unten
+                    playerDirection = "down";  // Bewegung nach unten
                     break;
                 case LEFT:
-                    player_dir = "left";  // Bewegung nach links
+                    playerDirection = "left";  // Bewegung nach links
                     break;
                 case RIGHT:
-                    player_dir = "right"; // Bewegung nach rechts
+                    playerDirection = "right"; // Bewegung nach rechts
                     break;
                 default:
                     break;
@@ -557,6 +554,4 @@ class Level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 }
 
-//Spieler Moves merken (HighScore (Anzahl Moves)) einbauen check
-//Level generieren
-//Level speichern?
+// Code by Leon Sahl
