@@ -68,7 +68,7 @@ class LiveView {
 
         server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         System.out.println("Open http://localhost:" + port + " in your browser");
-        System.out.println("Sollten Fehler aufgetreten seien, öffnen sie start/doku.java erneut, bis sie den Titelbildschirm sehen können!");
+        System.out.println("Sollten Fehler aufgetreten seien, oeffnen sie start/doku.java erneut, bis sie den Titelbildschirm sehen koennen!");
 
         // loaded-Request to signal successful processing of SSEType.LOAD
         server.createContext("/loaded", exchange -> {

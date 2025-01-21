@@ -9,16 +9,15 @@ import java.util.stream.Stream;
 
 public class PushyIsland{
     boolean gameRunning;
-    int currentLevel, moveCount, maxMoves;
+    int currentLevel, moveCount, maxMoves = 250;
     int[] moveStatics = new int[10];
     Turtle t = new Turtle(1100,700);
     Level l = new Level();
     String playerDirection = "";
     
-    public PushyIsland(){ // 3;
+    public PushyIsland(){ // 5;
         gameRunning = false;
         currentLevel = 0;
-        maxMoves = 250;
         run();
     }
     
@@ -122,7 +121,7 @@ public class PushyIsland{
     
     void gameWon(){ // Spiel gewonnen // 1;
         IntStream.of(moveStatics).forEach(System.out::println); // Scoreboard ausgeben
-        System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch.");
+        System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch. \n");
         System.out.println("[PushyIsland] Moechten Sie weitere Level spielen?");
         System.out.println("[PushyIsland] Verwenden Sie p.randomLevel() oder erstellen Sie ein eigenes.");
         endGame();
@@ -143,28 +142,32 @@ public class PushyIsland{
                 case 5 -> "🟩";                   // Erhöhung
                 case 6 -> "🐚";                   // Muschel
                 case 7 -> "😋";                   // Spieler
-                case 8 -> { y++ ; yield "🏠"; } // Haus
+                case 8 -> { y++ ; yield "🏠"; }   // Haus
                 default -> "❌";                  // Fehler
             };
             t.color(0, 0, 205).moveTo(x, y).text(emoji);
             });
         });
         levelStats();
+        maxMovesUsed();
     }
 
-    void levelStats(){
+    void levelStats(){ // Level Statistiken // 3;
         t.textSize = 30;
-        if (moveCount >= maxMoves) {
-            System.out.println("[PushyIsland] Das Level wurde automatisch nach " + maxMoves + " Moves neugestartet.");
-            restartLevel(); // Wenn mehr als 200 Moves, dann Level neustarten
-        }
         t.moveTo(70, 40).color(0, 0, 0).text("Level: " + currentLevel); // Aktuelles Level anzeigen
         t.moveTo(80, 80).text("Moves: " + moveCount); // Anzahl Moves anzeigen
+    }
+
+    void maxMovesUsed(){ // Maximale Moves erreicht // 2;
+        if (moveCount > maxMoves) {
+            System.out.println("[PushyIsland] Du hast zu viele Zuege gemacht. \n");
+            resetLevel();
+        }
     }
     
     void resetLevel() { // Methode um das derzeitiges Level zurücksetzen // 5;
         if (gameRunning) {
-            System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurückgesetzt. \n");
+            System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurueckgesetzt. \n");
             moveCount = 0;                         // Move Counter zurücksetzen
             l = loadLevel(currentLevel);           // Aktualisieren der vorhandenen Level-Instanz
             drawLevel(l);                          // Level anzeigen
@@ -222,7 +225,7 @@ public class PushyIsland{
     
         switch (object) {
             case 0:
-                System.out.println("[PushyIsland] Spieler kann nicht ins Wasser.");
+                System.out.println("[PushyIsland] Spieler kann nicht ins Wasser. \n");
                 return false;
             case 1:
                 movePlayer(player_posY, player_posX, object_posY, object_posX);
@@ -239,7 +242,7 @@ public class PushyIsland{
             if (countShell() == 0) {
                 moveCount++;
                 levelPassed();
-            } else System.out.println("[PushyIsland] Es wurden noch nicht alle Muscheln eingesammelt.");
+            } else System.out.println("[PushyIsland] Halt! Es wurden noch nicht alle Muscheln eingesammelt. \n");
                 break;
             default:
                 break;
@@ -393,8 +396,7 @@ class Level{
             }
         } l.world[houseY][houseX] = 8;
         
-        // Random Muscheln platzieren und Land drumherum
-        int shellCount = rand.nextInt(5) + 1;
+        int shellCount = rand.nextInt(5) + 1; // Random Muscheln platzieren und Land drumherum
         for (int i = 0; i < shellCount; i++) {
             int shellX = rand.nextInt(20) + 1;
             int shellY = rand.nextInt(12) + 1;
@@ -559,7 +561,7 @@ class Level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 1, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

@@ -19,7 +19,8 @@ Danach gibt es die Möglichkeit eigene Level zu erstellen und zu spielen, oder s
 Die grünen Kästchen repräsentieren eine Anhöhung, auf die der Spieler nicht kommen kann. <br>
 Anhöhung sowie Berge und Bäume dienen als Hindernisse auf der Insel. <br>
 Oben links befindet sich ein Score, welcher die Anzahl der Züge des Spielers zählt. <br>
-Bitte beachten Sie, dass sie **nicht** diagonal laufen können, versuchen Sie dies zu vermeiden.**
+Bitte beachten Sie, dass sie **nicht** diagonal laufen können, versuchen Sie dies zu vermeiden. <br>
+Man hat pro Level eine eingestellte Maximale Anzahl an Moves, diese ist 250.**
 <br>
 **Bewegt wird der Spieler über die Jshell mithilfe der Befehle p.move(Move.UP/DOWN/LEFT/RIGHT). <br>
 Da dies eine erschwärliche Fortbewegungsmöglichkeit ist, habe ich die Möglichkeit der Tastaturtasteneingabe hinzugefügt. <br>
