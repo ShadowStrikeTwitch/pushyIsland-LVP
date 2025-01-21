@@ -9,9 +9,9 @@ Clerk.clear();
 PushyIsland p = new PushyIsland();
 
 //Debugging
-//p.startGame();
-//p.currentLevel = 10;
-//p.levelPassed();
+p.startGame();
+p.currentLevel = 9;
+p.levelPassed();
 //p.drawLevel(p.l.generate());
 
 //Level generieren 

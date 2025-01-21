@@ -9,19 +9,20 @@ import java.util.stream.Stream;
 
 public class PushyIsland{
     boolean gameRunning;
-    int currentLevel, moveCount;
-    int[] moveStatics = new int[11];
+    int currentLevel, moveCount, maxMoves;
+    int[] moveStatics = new int[10];
     Turtle t = new Turtle(1100,700);
     Level l = new Level();
     String playerDirection = "";
     
-    public PushyIsland(){
+    public PushyIsland(){ // 3;
         gameRunning = false;
         currentLevel = 0;
+        maxMoves = 250;
         run();
     }
     
-    void run() { // Runtime
+    void run() { // Runtime // 3;
         if (gameRunning) {
             l = loadLevel(currentLevel);
             if (l != null) {
@@ -32,7 +33,7 @@ public class PushyIsland{
         }
     }
     
-    void startGame(){ // Spiel starten
+    void startGame(){ // Spiel starten // 4;
         if (!gameRunning) {
             gameRunning = true;
             currentLevel = 1;
@@ -40,14 +41,14 @@ public class PushyIsland{
         } else System.out.println("[PushyIsland] Das Spiel ist bereits im gange. \n");
     }
     
-    void endGame(){ // Spiel 'beenden'
+    void endGame(){ // Spiel 'beenden' // 4;
     gameRunning = false;
     currentLevel = 0;
     System.out.println("[PushyIsland] Spiel beendet. \n");
     Clerk.clear();
     }
 
-    void showTitleScreen(){ // Titelbildschirm
+    void showTitleScreen(){ // Titelbildschirm // 18;
         t.moveTo(550,190).color(33, 53, 85);
         for (int i = 0; i < 360; i++) {
             t.forward(2).right(1);
@@ -79,7 +80,7 @@ public class PushyIsland{
         t.text("Starten mit SPACEBAR oder p.startGame()").moveTo(550, 590).text("Steuern mit WASD oder p.move(Move.UP/DOWN/LEFT/RIGHT)").moveTo(550, 640).text("Du kannst ein Level neustarten mit R oder p.resetLevel()").moveTo(550, 690).text("Verlassen mit ESC oder p.endGame");
     }
 
-    Level loadLevel(int currentLevel) { // Einzelne Level generieren
+    Level loadLevel(int currentLevel) { // Einzelne Level generieren // 24;
         System.out.println("[PushyIsland] Level " + currentLevel + " wird geladen. \n");
         Level newLevel = new Level();
         switch (currentLevel) {
@@ -113,21 +114,21 @@ public class PushyIsland{
             case 10:
                 newLevel.loadWorld(newLevel.level10); // Level 10 laden
                 break;
-            default: // Sollten alle Standart-Level gespielt worden seien
-                System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch.");
-                IntStream.of(moveStatics).forEach(System.out::println); // Scoreboard ausgeben
-                newLevel.loadWorld(newLevel.generate().world); // Random Level generieren
-                
-        }
-        try {
-            Thread.sleep(500); // "Lade" Zeit
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            default:
+                gameWon();
         }
         return newLevel;
     }
+    
+    void gameWon(){ // Spiel gewonnen // 1;
+        IntStream.of(moveStatics).forEach(System.out::println); // Scoreboard ausgeben
+        System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch.");
+        System.out.println("[PushyIsland] Moechten Sie weitere Level spielen?");
+        System.out.println("[PushyIsland] Verwenden Sie p.randomLevel() oder erstellen Sie ein eigenes.");
+        endGame();
+    }
 
-    void drawLevel(Level l) { // Das Level anzeigen
+    void drawLevel(Level l) { // Das Level anzeigen // 20;
         int tx = 50, ty = 50;
         t.reset().left(90).textSize = 50;
         IntStream.range(0, l.world.length).forEach(i -> { // Level durchlaufen und bestimmte -
@@ -142,22 +143,26 @@ public class PushyIsland{
                 case 5 -> "🟩";                   // Erhöhung
                 case 6 -> "🐚";                   // Muschel
                 case 7 -> "😋";                   // Spieler
-                case 8 -> { y += 1; yield "🏠"; } // Haus
+                case 8 -> { y++ ; yield "🏠"; } // Haus
                 default -> "❌";                  // Fehler
             };
             t.color(0, 0, 205).moveTo(x, y).text(emoji);
             });
         });
+        levelStats();
+    }
+
+    void levelStats(){
         t.textSize = 30;
+        if (moveCount >= maxMoves) {
+            System.out.println("[PushyIsland] Das Level wurde automatisch nach " + maxMoves + " Moves neugestartet.");
+            restartLevel(); // Wenn mehr als 200 Moves, dann Level neustarten
+        }
         t.moveTo(70, 40).color(0, 0, 0).text("Level: " + currentLevel); // Aktuelles Level anzeigen
         t.moveTo(80, 80).text("Moves: " + moveCount); // Anzahl Moves anzeigen
     }
     
-    void clearScreen(){ // Den Bildschirm leeren
-        Clerk.clear();
-    }
-
-    void resetLevel() { // Methode um das derzeitiges Level zurücksetzen
+    void resetLevel() { // Methode um das derzeitiges Level zurücksetzen // 5;
         if (gameRunning) {
             System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurückgesetzt. \n");
             moveCount = 0;                         // Move Counter zurücksetzen
@@ -166,18 +171,19 @@ public class PushyIsland{
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
 
-    void levelPassed(){ // Methode welche nach Levelabschluss ausgeführt wird
+    void levelPassed(){ // Methode welche nach Levelabschluss ausgeführt wird // 6;
         if (gameRunning) {
             System.out.println("[PushyIsland] Level wurde mit " + moveCount +  " Moves geschafft. \n");
             if (currentLevel <= 10){
             moveStatics[currentLevel - 1] = moveCount; // Move Counter speichern
             moveCount = 0;                             // Move Counter zurücksetzen
-            currentLevel++;}                           // Derzeitiges Level erhöhen
+            currentLevel++;                            // Derzeitiges Level erhöhen
+        }
             run();
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
 
-    public String findPlayer(Level l) { // Methode um den Spieler auf dem Spielfeld zu finden
+    public String findPlayer(Level l) { // Methode um den Spieler auf dem Spielfeld zu finden // 2;
         for (int i = 0; i < l.world.length; i++) {
             for (int j = 0; j < l.world[i].length; j++) {
                 if (l.world[i][j] == 7) return i + "," + j;
@@ -186,7 +192,7 @@ public class PushyIsland{
         return "Player not found.";
     }
 
-    public int countShell(){ // Methode um die Anzahl der Muscheln zu zählen
+    public int countShell(){ // Methode um die Anzahl der Muscheln zu zählen // 3;
         int shellCount = 0;
         for (int i = 0; i < l.world.length; i++) {
             for (int j = 0; j < l.world[i].length; j++) {
@@ -196,14 +202,14 @@ public class PushyIsland{
         return shellCount;
     }
 
-    public int getObjectFromPosition(Level l, String pos){ // Methode um das Objekt an einer bestimmten Position zu finden
+    public int getObjectFromPosition(Level l, String pos){ // Methode um das Objekt an einer bestimmten Position zu finden // 4;
         int devider = pos.lastIndexOf(",");
         int y = Integer.parseInt(pos.substring(0, devider));
         int x = Integer.parseInt(pos.substring(devider + 1, pos.length()));
         return l.world[y][x];
     }
 
-    boolean rules() { // Die Grundregeln des Spiels
+    boolean rules() { // Die Grundregeln des Spiels // 23;
         String player_pos = findPlayer(l);
         int devider = player_pos.lastIndexOf(",");
         int player_posY = Integer.parseInt(player_pos.substring(0, devider));
@@ -221,6 +227,8 @@ public class PushyIsland{
             case 1:
                 movePlayer(player_posY, player_posX, object_posY, object_posX);
                 break;
+            case 2,3:
+                return false;
             case 4:
                 if (!moveBox(player_posY, player_posX, object_posY, object_posX)) return false;
                 break;
@@ -240,7 +248,7 @@ public class PushyIsland{
         return true;
     }
     
-    int[] getPossitionFromObject(int player_posY, int player_posX) { // Position des Objekts finden
+    int[] getPossitionFromObject(int player_posY, int player_posX) { // Position des Objekts finden // 19;
         int object_posY = 0, object_posX = 0, object = 0;
     
         switch (playerDirection) {
@@ -270,13 +278,13 @@ public class PushyIsland{
         return new int[]{object_posY, object_posX, object}; // Rückgabe der Position des Objekts
     }
     
-    void movePlayer(int player_posY, int player_posX, int object_posY, int object_posX) { // Spieler bewegen
+    void movePlayer(int player_posY, int player_posX, int object_posY, int object_posX) { // Spieler bewegen // 3;
         l.world[player_posY][player_posX] = 1;
         l.world[object_posY][object_posX] = 7;
         moveCount++;
     }
     
-    boolean moveBox(int player_posY, int player_posX, int object_posY, int object_posX) { // Box bewegen
+    boolean moveBox(int player_posY, int player_posX, int object_posY, int object_posX) { // Box bewegen // 19;
         int newBoxPosY = object_posY, newBoxPosX = object_posX;
     
         switch (playerDirection) {
@@ -309,7 +317,7 @@ public class PushyIsland{
         return true;
     }
         
-    public void move(Move m) {
+    public void move(Move m) { // Move richtung anpassen.  // 10;
         if (gameRunning) {
             switch (m) {
                 case UP:
@@ -330,9 +338,24 @@ public class PushyIsland{
             rules();
         }
     }
+
+    void randomLevel(){ // Random Level generieren und anzeigen. // 2;
+        drawLevel(l.generate());
+        currentLevel++;
+    }
+
+    void playOwnLevel(int[][] ownLevel){ // Eigenes Level spielen // 3;
+        gameRunning = true;
+        l.world = ownLevel;
+        drawLevel(l);
+    }
+
+    void clearScreen(){ // Den Bildschirm leeren // 1;
+        Clerk.clear();
+    }
 }
 
-enum Move {
+enum Move { // Enum für die Bewegungsrichtungen
     UP,
     DOWN,
     LEFT,
@@ -346,7 +369,7 @@ class Level{
         world = new int[14][22]; // Leeres Level erstellen
     }
     
-    Level generate(){
+    Level generate(){ // 16;
         Random rand = new Random();
         Level l = new Level();
 
@@ -388,9 +411,16 @@ class Level{
         return l;
     }
 
-    int[][] loadWorld(int[][] world){
+    int[][] loadWorld(int[][] world){ // Worldloader // 2;
         this.world = world;
-        return world; // Fertige Level laden
+
+        try {
+            Thread.sleep(1500); // "Lade" Zeit
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return world; // Level zurückgeben
     }
 
     int[][] level1 = {
@@ -508,16 +538,16 @@ class Level{
     int[][] level8 = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 1, 1, 1, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 1, 1, 1, 3, 2, 1, 1, 1, 0, 1, 1, 2, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 3, 1, 1, 1, 5, 5, 5, 3, 1, 1, 0, 0, 1, 8, 2, 0, 0, 0, 0 },
+        { 0, 0, 0, 1, 3, 2, 1, 1, 5, 5, 5, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 5, 3, 1, 1, 0, 0, 1, 1, 3, 0, 0, 0 },
+        { 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 3, 1, 0, 0, 1, 6, 0, 0, 0 },
+        { 0, 0, 0, 1, 4, 4, 1, 0, 0, 1, 2, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0 },
+        { 0, 0, 0, 2, 1, 1, 1, 1, 0, 0, 1, 1, 4, 1, 6, 3, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 7, 2, 1, 1, 6, 0, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
@@ -540,17 +570,17 @@ class Level{
     int[][] level10 = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 6, 1, 1, 1, 1, 2, 0, 0, 0, 0, 3, 1, 1, 1, 1, 1, 3, 0, 0 },
+        { 0, 0, 0, 1, 4, 1, 1, 4, 0, 0, 0, 0, 0, 1, 1, 3, 5, 5, 6, 1, 3, 0 },
+        { 0, 0, 0, 2, 1, 4, 1, 0, 0, 0, 0, 0, 0, 1, 5, 5, 5, 5, 1, 1, 0, 0 },
+        { 0, 0, 0, 0, 1, 1, 4, 1, 0, 0, 0, 0, 0, 1, 1, 5, 5, 1, 1, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 3, 1, 1, 4, 1, 2, 0, 0, 0 },
+        { 0, 0, 0, 0, 3, 7, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 6, 1, 8, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 }
 
