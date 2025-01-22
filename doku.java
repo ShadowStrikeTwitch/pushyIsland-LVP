@@ -27,26 +27,28 @@ Da dies eine erschwärliche Fortbewegungsmöglichkeit ist, habe ich die Möglich
 Mithilfe von W/A/S/D kann man den Spieler im Browser direkt steuern.**
 
 ```java
-public void move(Move m) { // Move richtung anpassen.  // 10;
-        if (gameRunning) {
-            switch (m) {
-                case UP:
-                    playerDirection = "up";    // Bewegung nach oben
-                    break;
-                case DOWN:
-                    playerDirection = "down";  // Bewegung nach unten
-                    break;
-                case LEFT:
-                    playerDirection = "left";  // Bewegung nach links
-                    break;
-                case RIGHT:
-                    playerDirection = "right"; // Bewegung nach rechts
-                    break;
-                default:
-                    break;
-            }
-            rules();
-        }
+String player_pos = findPlayer(l);
+        int devider = player_pos.lastIndexOf(",");
+        int player_posY = Integer.parseInt(player_pos.substring(0, devider));
+        int player_posX = Integer.parseInt(player_pos.substring(devider + 1, player_pos.length()));
+
+int[] objectPos = getPossitionFromObject(player_posY, player_posX);
+        int object_posY = objectPos[0];
+        int object_posX = objectPos[1];
+        int object = objectPos[2];
+
+switch (object) {
+            case 0:
+                System.out.println("[PushyIsland] Spieler kann nicht ins Wasser.");
+                return false;
+            case 1:
+                movePlayer(player_posY, player_posX, object_posY, object_posX);
+                break;
+
+void movePlayer(int player_posY, int player_posX, int object_posY, int object_posX) {
+        l.world[player_posY][player_posX] = 1;
+        l.world[object_posY][object_posX] = 7;
+        moveCount++;
     }
 ```
 
@@ -93,6 +95,10 @@ boolean moveBox(int player_posY, int player_posX, int object_posY, int object_po
     }
 ```
 
+## Muscheln sammeln/retten? (Szenario 4)
+**Die Muscheln sind die Bewohner der Insel, sie sind in den Leveln verteilt und müssen gesammelt werden. <br>
+Sollte der Spieler alle Muscheln gesammelt haben, dann darf er zum Ziel.**
+
 ## Das Level neustarten
 **Manchmal kann es passieren dass man sich Softlocked oder einfach nicht weiter weiß, 
 dafür gitb es die Möglichkeit des Level neuzustarten. <br>
@@ -110,7 +116,7 @@ void resetLevel() { // Methode um das derzeitiges Level zurücksetzen // 5;
     }
 ```
 
-## Eigene Level erstellen
+## Eigene Level erstellen (Szenario 5.1)
 **Jeder kann kinderleicht ein eigenes Level erstellen, ich selbst habe 10 level erstellt, das hat wirklich Spaß gemacht. <br>
 Dafür habe ich eine Methode erstellt, die ein Level aus einem Array erstellt. <br>
 Wenn du ein eigenes Level erstellen möchtest, dann kannst du folgendes Array verwenden:**
@@ -154,8 +160,43 @@ others -> "❌";      // Fehler (Falsche Zahl)
 # Scoreboard
 | Name | Moves ges.|
 | ----------- | ----------- |
-| Leon | 438 |
-| Andrea | 457 |
+| Leon | 558 |
+| Andrea | xxx |
+| Martin | 564 |
+| | |
+| | |
 
+## Der Random Level Generator (Szenario 5.2)
+**Ein Random Level kann mithilfe des Befehls p.randomLevel() generiert werden. <br>
+Dieser Befehl generiert ein zufälliges Level, welches du dann spielen kannst. <br>
+Sollte dir das Level nicht gefallen, oder es ist unmöglich, kannst du mit R oder p.resetLevel() ein neues generieren lassen. <br>
+Gefällt dir ein Level besonders gut, dann kannst du dir mit p.l.world anzeigen lassen und abspeichern. <br>
+Viel Spaß beim Spielen!**
 
+```java 
+    Level generate(){ // 16;
+        Level l = new Level();
+        generatePlayer(l); // Spieler platzieren
+        generateBoxes(l); // Boxen platzieren
+        generateHouse(l); // Haus platzieren
+        generateShells(l); // Muscheln platzieren
+        generateSand(l); // Sand verteilen
+        generateWater(l); // Wasser um das Spielfeld
+        generateObstacles(l); // Hindernisse generieren
+        return l;
+    }
+    
+    Level generatePlayer(Level l){ // Spieler / Land
+        Random rand = new Random();
+        int playerX = rand.nextInt(19) + 1;
+        int playerY = rand.nextInt(11) + 1;
+        for (int i = playerY - 1; i < playerY + 2; i++) {
+            for (int j = playerX - 1; j < playerX + 2; j++) {
+                l.world[i][j] = 1;
+            }
+        }
+        l.world[playerY][playerX] = 7;
+        return l;
+    }
+```
 """));

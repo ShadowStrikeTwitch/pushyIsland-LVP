@@ -1,11 +1,10 @@
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 
 public class PushyIsland{
     boolean gameRunning, titleScreen;
@@ -22,15 +21,24 @@ public class PushyIsland{
         run();
     }
     
-    void startGame(){ // Spiel starten // 4;
-        assert !gameRunning : "Das Spiel ist bereits im gange.";
+    // ------------------------- SPIELINSTANZ LOGIK -------------------------
+
+    void startGame() {
+        if (gameRunning) {
+            System.out.println("Das Spiel ist bereits im Gange.");
+            return;
+        }
         gameRunning = true;
         currentLevel = 1;
-        run();    
+        run();
     }
 
     void run() { // Runtime // 3;
         if (gameRunning) {
+            if (currentLevel > 10) {
+                gameWon();
+                return;
+            }
             l = loadLevel(currentLevel);
             drawLevel(l);
         } else {
@@ -38,17 +46,11 @@ public class PushyIsland{
         }
     }
     
-    void endGame(){ // Spiel 'beenden' // 4;
-    gameRunning = false;
-    titleScreen = false;
-    moveCount = 0;
-    moveStatics = new int[10];
-    t.reset();
-    System.out.println("[PushyIsland] Spiel beendet. Neustart mit p.showTtleScreen() \n");
-    }
-
     void showTitleScreen(){ // Titelbildschirm // 18;
-        assert !titleScreen : "Der Titelbildschirm wurde bereits angezeigt.";
+        if (titleScreen) {
+            System.out.println("Der Titelbildschirm wurde bereits angezeigt.");
+            return;
+        }
         titleScreen = true;
         t.moveTo(550,190).color(33, 53, 85);
         for (int i = 0; i < 360; i++) {
@@ -70,7 +72,6 @@ public class PushyIsland{
         for (int i = 0; i < 360; i++) {
             t.forward(0.1).right(1);
         }
-
         t.left(90).color(62, 88, 121);
         t.textSize = 85;
         t.moveTo(550, 100).text("PushyIsland - remake");
@@ -80,59 +81,58 @@ public class PushyIsland{
         t.color(62, 88, 121).moveTo(550, 540);
         t.text("Starten mit SPACEBAR oder p.startGame()").moveTo(550, 590).text("Steuern mit WASD oder p.move(Move.UP/DOWN/LEFT/RIGHT)").moveTo(550, 640).text("Du kannst ein Level neustarten mit R oder p.resetLevel()").moveTo(550, 690).text("Verlassen mit ESC oder p.endGame");
     }
+    
+    void gameWon(){ // Spiel gewonnen // 6;
+        if (currentLevel == 50) {
+            moveCount = 0;
+            System.out.println("[PushyIsland] Du hast das Bonuslevel geschafft. \n");
+            return;
+        }
+        int sum = IntStream.of(moveStatics).sum(); // Scoreboard Summe
+        System.out.println("\n\n\n\n\n[PushyIsland] Du hast das Ende der Kampagne erreicht, <3-lichen Glueckwunsch.\n");
+        System.out.println("[PushyIsland] Trage gerne " + sum + " ins Scoreboard ein.");
+        System.out.println("[PushyIsland] Moechten Sie weitere Level spielen?");
+        System.out.println("[PushyIsland] Verwenden Sie p.randomLevel() oder erstellen Sie ein eigenes.");
+        System.out.println("[PushyIsland] Oder ESC / p.endGame um das Spiel zu beenden.");
+        t.reset();
+    }
+    
+    void endGame() { // Spiel beenden // 3;
+        resetGameVariables();
+        t.reset();
+        System.out.println("[PushyIsland] Spiel beendet. Neustart mit p.showTitleScreen() \n");
+    }
+    
+    void resetGameVariables() { // Spielvariablen zurücksetzen // 4;
+        gameRunning = false;
+        titleScreen = false;
+        moveCount = 0;
+        moveStatics = new int[10];
+    }
 
-    Level loadLevel(int currentLevel) { // Einzelne Level generieren // 24;
+    // ------------------------- LEVEL LOGIK -------------------------
+
+    Level loadLevel(int currentLevel) {
+        
         System.out.println("[PushyIsland] Level " + currentLevel + " wird geladen... \n");
         Level newLevel = new Level();
-        switch (currentLevel) {
-            case 1:
-                newLevel.loadWorld(newLevel.level1); // Level 1 laden
-                break;
-            case 2:
-                newLevel.loadWorld(newLevel.level2); // Level 2 laden
-                break;
-            case 3:
-                newLevel.loadWorld(newLevel.level3); // Level 3 laden 
-                break;
-            case 4:
-                newLevel.loadWorld(newLevel.level4); // Level 4 laden
-                break;
-            case 5:
-                newLevel.loadWorld(newLevel.level5); // Level 5 laden
-                break;
-            case 6:
-                newLevel.loadWorld(newLevel.level6); // Level 6 laden
-                break;
-            case 7:
-                newLevel.loadWorld(newLevel.level7); // Level 7 laden
-                break;
-            case 8:
-                newLevel.loadWorld(newLevel.level8); // Level 8 laden
-                break;
-            case 9:
-                newLevel.loadWorld(newLevel.level9); // Level 9 laden
-                break;
-            case 10:
-                newLevel.loadWorld(newLevel.level10); // Level 10 laden
-                break;
-            default:
-                gameWon();
-        }
+        Map<Integer, int[][]> levels = Map.of(
+            1, l.level1,
+            2, l.level2,
+            3, l.level3,
+            4, l.level4,
+            5, l.level5,
+            6, l.level6,
+            7, l.level7,
+            8, l.level8,
+            9, l.level9,
+            10, l.level10
+        );
+        newLevel.loadWorld(levels.get(currentLevel));
         return newLevel;
     }
     
-    void gameWon(){ // Spiel gewonnen // 1;
-        gameRunning = false;
-        currentLevel = 0;
-        IntStream.of(moveStatics).forEach(System.out::println); // Scoreboard ausgeben
-        System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch. \n");
-        System.out.println("[PushyIsland] Moechten Sie weitere Level spielen?");
-        System.out.println("[PushyIsland] Verwenden Sie p.randomLevel() oder erstellen Sie ein eigenes.");
-        endGame();
-        playOwnLevel(ownLevel);
-    }
-
-    void drawLevel(Level l) { // Das Level anzeigen // 20;
+    void drawLevel(Level l) { // Das Level anzeigen // 9;
         int tx = 50, ty = 50;
         t.reset().left(90).textSize = 50;
         IntStream.range(0, l.world.length).forEach(i -> { // Level durchlaufen und bestimmte -
@@ -165,7 +165,6 @@ public class PushyIsland{
             t.moveTo(110, 40).color(0, 0, 0).text("Level: Random");          // ANZEIGE: Bonus Level
         } else t.moveTo(110, 40).color(0, 0, 0).text("Level: Eigenes");     // ANZEIGE: Eigenes Level
         t.moveTo(80, 80).text("Moves: " + moveCount);                       // ANZEIGE: Anzahl Moves
-
     }
 
     void maxMovesUsed(){ // Maximale Moves erreicht // 2;
@@ -181,23 +180,30 @@ public class PushyIsland{
             moveCount = 0;                         // Move Counter zurücksetzen
             if (currentLevel < 11) {
                 l = loadLevel(currentLevel);       // Aktualisieren der vorhandenen Level-Instanz
+                drawLevel(l);                      // Level anzeigen
             } else if (currentLevel == 50) {
-                l = l.generate();
-            } drawLevel(l);                        // Level anzeigen
+                l = l.generate();                  // Random Level generieren
+                drawLevel(l);                      // Level anzeigen
+            } 
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
 
     void levelPassed(){ // Methode welche nach Levelabschluss ausgeführt wird // 6;
         if (gameRunning) {
-            System.out.println("[PushyIsland] Level wurde mit " + moveCount +  " Moves geschafft. \n");
             if (currentLevel <= 10){
-            moveStatics[currentLevel - 1] = moveCount; // Move Counter speichern
-            moveCount = 0;                             // Move Counter zurücksetzen
-            currentLevel++;                            // Derzeitiges Level erhöhen
-        }
+                System.out.println("[PushyIsland] Level " + currentLevel + " wurde mit " + moveCount +  " Moves geschafft. \n");
+                moveStatics[currentLevel - 1] = moveCount; // Move Counter speichern
+                moveCount = 0;                             // Move Counter zurücksetzen
+                currentLevel++;                            // Derzeitiges Level erhöhen
+            } else if (currentLevel == 50){
+                l = l.generate();                          // Random Level generieren
+                drawLevel(l);                   // Random Level generieren
+            }
             run();
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
+
+    // ------------------------- SPIELER LOGIK -------------------------
 
     public String findPlayer(Level l) { // Methode um den Spieler auf dem Spielfeld zu finden // 2;
         for (int i = 0; i < l.world.length; i++) {
@@ -205,7 +211,7 @@ public class PushyIsland{
                 if (l.world[i][j] == 7) return i + "," + j;
             }
         }
-        return "Player not found.";
+        return "Spieler nicht gefunden!";
     }
 
     public int countShell(){ // Methode um die Anzahl der Muscheln zu zählen // 3;
@@ -243,7 +249,7 @@ public class PushyIsland{
             case 1:
                 movePlayer(player_posY, player_posX, object_posY, object_posX);
                 break;
-            case 2,3:
+            case 2,3,5:
                 return false;
             case 4:
                 if (!moveBox(player_posY, player_posX, object_posY, object_posX)) return false;
@@ -258,6 +264,7 @@ public class PushyIsland{
             } else System.out.println("[PushyIsland] Halt! Es wurden noch nicht alle Muscheln eingesammelt. \n");
                 break;
             default:
+                System.out.println("[PushyIsland] Error. \n");
                 break;
         }
         drawLevel(l); // Verändertes Spielfeld neuladen
@@ -357,7 +364,9 @@ public class PushyIsland{
 
     void randomLevel(){ // Random Level generieren und anzeigen. // 2;
         currentLevel = 50;
-        drawLevel(l.generate());
+        gameRunning = true;
+        l = l.generate();
+        drawLevel(l);
     }
 
     void playOwnLevel(int[][] ownLevel){ // Eigenes Level spielen // 3;
@@ -381,19 +390,25 @@ class Level{
     Level(){
         world = new int[14][22]; // Leeres Level erstellen
     }
-    
+
+    // ------------------------- LEVEL GENERATOR -------------------------
+
     Level generate(){ // 16;
         Level l = new Level();
         generatePlayer(l); // Spieler platzieren
+        generateBoxes(l); // Boxen platzieren
         generateHouse(l); // Haus platzieren
         generateShells(l); // Muscheln platzieren
+        generateSand(l); // Sand verteilen
+        generateWater(l); // Wasser um das Spielfeld
+        generateObstacles(l); // Hindernisse generieren
         return l;
     }
     
     Level generatePlayer(Level l){ // Spieler / Land
         Random rand = new Random();
-        int playerX = rand.nextInt(20) + 1;
-        int playerY = rand.nextInt(12) + 1;
+        int playerX = rand.nextInt(19) + 1;
+        int playerY = rand.nextInt(11) + 1;
         for (int i = playerY - 1; i < playerY + 2; i++) {
             for (int j = playerX - 1; j < playerX + 2; j++) {
                 l.world[i][j] = 1;
@@ -402,11 +417,29 @@ class Level{
         l.world[playerY][playerX] = 7;
         return l;
     }
+
+    Level generateBoxes(Level l){
+        Random rand = new Random();
+        int boxCount = rand.nextInt(5) + 1;
+        for (int i = 0; i < boxCount; i++) {
+            int boxX = rand.nextInt(19) + 1;
+            int boxY = rand.nextInt(11) + 1;
+            if (l.world[boxY][boxX] == 0) {
+                for (int j = boxY - 1; j < boxY + 2; j++) {
+                    for (int k = boxX - 1; k < boxX + 2; k++) {
+                        l.world[j][k] = 1;
+                    }
+                }
+                l.world[boxY][boxX] = 4;
+            }
+        }
+        return l;
+    }
     
     Level generateHouse(Level l){ // Haus / Land
         Random rand = new Random();
-        int houseX = rand.nextInt(20) + 1;
-        int houseY = rand.nextInt(12) + 1;
+        int houseX = rand.nextInt(19) + 1;
+        int houseY = rand.nextInt(11) + 1;
         for (int i = houseY - 1; i < houseY + 2; i++) {
             for (int j = houseX - 1; j < houseX + 2; j++) {
                 if (l.world[i][j] != 7) {
@@ -422,8 +455,8 @@ class Level{
         Random rand = new Random();
         int shellCount = rand.nextInt(5) + 1; 
         for (int i = 0; i < shellCount; i++) {
-            int shellX = rand.nextInt(20) + 1;
-            int shellY = rand.nextInt(12) + 1;
+            int shellX = rand.nextInt(19) + 1;
+            int shellY = rand.nextInt(11) + 1;
             if (l.world[shellY][shellX] == 0) {
                 for (int j = shellY - 1; j < shellY + 2; j++) {
                     for (int k = shellX - 1; k < shellX + 2; k++) {
@@ -437,9 +470,49 @@ class Level{
         return l;
     }
 
+    Level generateSand(Level l){ // Bisschen Land verteilen
+        Random rand = new Random();
+        for (int i = 1; i < 13; i++) {
+            for (int j = 1; j < 21; j++) {
+                if (l.world[i][j] == 0) {
+                    l.world[i][j] = rand.nextInt(2);
+                }
+            }
+        }
+        return l;
+    }
+
+    Level generateWater(Level l){ // Wasser um das Spielfeld
+        for (int i = 0; i < 14; i++) {
+            for (int j = 0; j < 22; j++) {
+                if (i == 0 || i == 13 || j == 0 || j == 21) {
+                    l.world[i][j] = 0;
+                }
+            }
+        }
+        return l;
+    }
+
+    Level generateObstacles(Level l){ // Hindernisse generieren
+        Random rand = new Random();
+        int obstacleCount = rand.nextInt(5) + 1;
+        for (int i = 0; i < obstacleCount; i++) {
+            int obstacleX = rand.nextInt(19) + 1;
+            int obstacleY = rand.nextInt(11) + 1;
+            if (l.world[obstacleY][obstacleX] == 0) {
+                int sprite = rand.nextInt(2);
+                if (sprite == 0) {
+                    l.world[obstacleY][obstacleX] = 2;
+                } else l.world[obstacleY][obstacleX] = 3;
+            }
+        }
+        return l;
+    }
+
+    // ------------------------- LEVEL LOADER UND KAMPAGNE -------------------------
+
     int[][] loadWorld(int[][] world){ // Worldloader // 2;
         this.world = world;
-
         try {
             Thread.sleep(1500); // "Lade" Zeit
         } catch (InterruptedException e) {
@@ -608,6 +681,21 @@ class Level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 6, 1, 8, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
-}
 
+    int[][] thanksForPlaying = {
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0 },
+        { 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1 },
+        { 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0 },
+        { 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1 },
+        { 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        { 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1 },
+        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }};
+}
 // Code by Leon Sahl
