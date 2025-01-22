@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 
 public class PushyIsland{
-    boolean gameRunning;
+    boolean gameRunning, titleScreen;
     int currentLevel, moveCount, maxMoves = 250;
     int[] moveStatics = new int[10];
     Turtle t = new Turtle(1100,700);
@@ -42,12 +42,14 @@ public class PushyIsland{
     
     void endGame(){ // Spiel 'beenden' // 4;
     gameRunning = false;
-    currentLevel = 0;
+    titleScreen = false;
+    t.reset();
     System.out.println("[PushyIsland] Spiel beendet. \n");
-    Clerk.clear();
     }
 
     void showTitleScreen(){ // Titelbildschirm // 18;
+        assert !titleScreen : "Der Titelbildschirm wurde bereits angezeigt.";
+        titleScreen = true;
         t.moveTo(550,190).color(33, 53, 85);
         for (int i = 0; i < 360; i++) {
             t.forward(2).right(1);
@@ -120,6 +122,8 @@ public class PushyIsland{
     }
     
     void gameWon(){ // Spiel gewonnen // 1;
+        gameRunning = false;
+        currentLevel = 0;
         IntStream.of(moveStatics).forEach(System.out::println); // Scoreboard ausgeben
         System.out.println("[PushyIsland] Es gibt keine weiteren Level, <3-lichen Glueckwunsch. \n");
         System.out.println("[PushyIsland] Moechten Sie weitere Level spielen?");
@@ -350,11 +354,8 @@ public class PushyIsland{
     void playOwnLevel(int[][] ownLevel){ // Eigenes Level spielen // 3;
         gameRunning = true;
         l.world = ownLevel;
+        currentLevel = 11;
         drawLevel(l);
-    }
-
-    void clearScreen(){ // Den Bildschirm leeren // 1;
-        Clerk.clear();
     }
 }
 
@@ -585,5 +586,24 @@ class Level{
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 }
+
+int[][] ownLevel = {
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 7, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }};
+
+
+
 
 // Code by Leon Sahl
