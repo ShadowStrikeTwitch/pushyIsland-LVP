@@ -25,7 +25,7 @@ int[][] ownLevel = {
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }};
 
 // DEBBUNGING
-//p.startGame();
+p.startGame();
 //p.currentLevel = 0;
 //p.levelPassed();
 //p.randomLevel();
@@ -45,6 +45,7 @@ int[][] ownLevel = {
 //79
 //2
 //129
+// Summe = 457
 
 // Leon:
 //19
@@ -57,3 +58,4 @@ int[][] ownLevel = {
 //75
 //2
 //123
+// Summe = 438

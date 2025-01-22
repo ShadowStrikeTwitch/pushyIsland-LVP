@@ -150,5 +150,12 @@ others -> "❌";      // Fehler (Falsche Zahl)
 1. **Füge das erstellte Array in die Jshell ein.**
 2. **Führe nun den Befehl p.playOwnLevel(ownLevel) aus.**
 3. **Spaß haben und das Level lösen.**
-        """)
-);
+
+# Scoreboard
+| Name | Moves ges.|
+| ----------- | ----------- |
+| Leon | 438 |
+| Andrea | 457 |
+
+
+"""));

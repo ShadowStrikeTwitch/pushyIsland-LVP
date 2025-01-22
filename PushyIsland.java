@@ -178,7 +178,11 @@ public class PushyIsland{
         if (gameRunning) {
             System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurueckgesetzt. \n");
             moveCount = 0;                         // Move Counter zurücksetzen
-            l = loadLevel(currentLevel);           // Aktualisieren der vorhandenen Level-Instanz
+            if (currentLevel < 11) {
+                l = loadLevel(currentLevel);           // Aktualisieren der vorhandenen Level-Instanz
+            } else if (currentLevel == 50) {
+                l = l.generate();
+            }
             drawLevel(l);                          // Level anzeigen
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
@@ -379,19 +383,28 @@ class Level{
     }
     
     Level generate(){ // 16;
-        Random rand = new Random();
         Level l = new Level();
-
-        // Spieler Random positionieren und Land herum
+        generatePlayer(l); // Spieler platzieren
+        generateHouse(l); // Haus platzieren
+        generateShells(l); // Muscheln platzieren
+        return l;
+    }
+    
+    Level generatePlayer(Level l){ // Spieler / Land
+        Random rand = new Random();
         int playerX = rand.nextInt(20) + 1;
         int playerY = rand.nextInt(12) + 1;
         for (int i = playerY - 1; i < playerY + 2; i++) {
             for (int j = playerX - 1; j < playerX + 2; j++) {
                 l.world[i][j] = 1;
             }
-        } l.world[playerY][playerX] = 7;
-        
-        // Ein Haus platzieren
+        }
+        l.world[playerY][playerX] = 7;
+        return l;
+    }
+    
+    Level generateHouse(Level l){ // Haus / Land
+        Random rand = new Random();
         int houseX = rand.nextInt(20) + 1;
         int houseY = rand.nextInt(12) + 1;
         for (int i = houseY - 1; i < houseY + 2; i++) {
@@ -400,9 +413,14 @@ class Level{
                     l.world[i][j] = 1;
                 }
             }
-        } l.world[houseY][houseX] = 8;
-        
-        int shellCount = rand.nextInt(5) + 1; // Random Muscheln platzieren und Land drumherum
+        }
+        l.world[houseY][houseX] = 8;
+        return l;
+    }
+    
+    Level generateShells(Level l){ // Muscheln / Land
+        Random rand = new Random();
+        int shellCount = rand.nextInt(5) + 1; 
         for (int i = 0; i < shellCount; i++) {
             int shellX = rand.nextInt(20) + 1;
             int shellY = rand.nextInt(12) + 1;
