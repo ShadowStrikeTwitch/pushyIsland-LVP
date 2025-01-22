@@ -18,6 +18,7 @@ public class PushyIsland{
     public PushyIsland(){ // 5;
         gameRunning = false;
         currentLevel = 0;
+        System.out.println("\n[PushyIsland] Willkommen zu PushyIsland.");
         run();
     }
     
@@ -31,9 +32,7 @@ public class PushyIsland{
     void run() { // Runtime // 3;
         if (gameRunning) {
             l = loadLevel(currentLevel);
-            if (l != null) {
-                drawLevel(l);
-            }
+            drawLevel(l);
         } else {
             showTitleScreen();
         }
@@ -42,8 +41,10 @@ public class PushyIsland{
     void endGame(){ // Spiel 'beenden' // 4;
     gameRunning = false;
     titleScreen = false;
+    moveCount = 0;
+    moveStatics = new int[10];
     t.reset();
-    System.out.println("[PushyIsland] Spiel beendet. \n");
+    System.out.println("[PushyIsland] Spiel beendet. Neustart mit p.showTtleScreen() \n");
     }
 
     void showTitleScreen(){ // Titelbildschirm // 18;
@@ -179,11 +180,10 @@ public class PushyIsland{
             System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurueckgesetzt. \n");
             moveCount = 0;                         // Move Counter zurücksetzen
             if (currentLevel < 11) {
-                l = loadLevel(currentLevel);           // Aktualisieren der vorhandenen Level-Instanz
+                l = loadLevel(currentLevel);       // Aktualisieren der vorhandenen Level-Instanz
             } else if (currentLevel == 50) {
                 l = l.generate();
-            }
-            drawLevel(l);                          // Level anzeigen
+            } drawLevel(l);                        // Level anzeigen
         } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet. \n");
     }
 

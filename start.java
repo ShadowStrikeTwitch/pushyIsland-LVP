@@ -25,7 +25,7 @@ int[][] ownLevel = {
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }};
 
 // DEBBUNGING
-p.startGame();
+//p.startGame();
 //p.currentLevel = 0;
 //p.levelPassed();
 //p.randomLevel();
