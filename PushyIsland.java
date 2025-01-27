@@ -244,16 +244,15 @@ public class PushyIsland{
         int object_posX = objectPos[1];
         int object = objectPos[2];
     
+        canMove = true;
         switch (object) {
             case 0:
                 System.out.println("[PushyIsland] Spieler kann nicht ins Wasser. \n");
-                canMove = true;
                 return false;
             case 1:
                 movePlayer(player_posY, player_posX, object_posY, object_posX);
                 break;
             case 2,3,5:
-                canMove = true;
                 return false;
             case 4:
                 if (!moveBox(player_posY, player_posX, object_posY, object_posX)) return false;
