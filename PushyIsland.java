@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class PushyIsland{
-    boolean gameRunning, titleScreen;
+    boolean gameRunning, titleScreen, canMove;
     int currentLevel, moveCount, maxMoves = 250;
     int[] moveStatics = new int[10];
     Turtle t = new Turtle(1100,700);
@@ -29,6 +29,7 @@ public class PushyIsland{
             return;
         }
         gameRunning = true;
+        canMove = true;
         currentLevel = 1;
         run();
     }
@@ -155,6 +156,7 @@ public class PushyIsland{
         });
         levelStats();
         maxMovesUsed();
+        canMove = true;
     }
 
     void levelStats(){ // Level Statistiken // 5;
@@ -245,11 +247,13 @@ public class PushyIsland{
         switch (object) {
             case 0:
                 System.out.println("[PushyIsland] Spieler kann nicht ins Wasser. \n");
+                canMove = true;
                 return false;
             case 1:
                 movePlayer(player_posY, player_posX, object_posY, object_posX);
                 break;
             case 2,3,5:
+                canMove = true;
                 return false;
             case 4:
                 if (!moveBox(player_posY, player_posX, object_posY, object_posX)) return false;
@@ -341,7 +345,8 @@ public class PushyIsland{
     }
         
     public void move(Move m) { // Move richtung anpassen.  // 10;
-        if (gameRunning) {
+        if (gameRunning && canMove) {
+            canMove = false;
             switch (m) {
                 case UP:
                     playerDirection = "up";    // Bewegung nach oben
@@ -404,108 +409,103 @@ class Level{
         generateObstacles(l); // Hindernisse generieren
         return l;
     }
-    
-    Level generatePlayer(Level l){ // Spieler / Land
+
+    Level generatePlayer(Level l) { // Spieler / Land
         Random rand = new Random();
         int playerX = rand.nextInt(19) + 1;
         int playerY = rand.nextInt(11) + 1;
-        for (int i = playerY - 1; i < playerY + 2; i++) {
-            for (int j = playerX - 1; j < playerX + 2; j++) {
-                l.world[i][j] = 1;
-            }
-        }
+        IntStream.range(playerY - 1, playerY + 2).forEach(i ->
+            IntStream.range(playerX - 1, playerX + 2).forEach(j -> l.world[i][j] = 1)
+        );
         l.world[playerY][playerX] = 7;
         return l;
     }
-
-    Level generateBoxes(Level l){
+    
+    Level generateBoxes(Level l) {
         Random rand = new Random();
-        int boxCount = rand.nextInt(5) + 1;
-        for (int i = 0; i < boxCount; i++) {
+        int boxCount = rand.nextInt(5) + 2;
+        IntStream.range(0, boxCount).forEach(i -> {
             int boxX = rand.nextInt(19) + 1;
             int boxY = rand.nextInt(11) + 1;
             if (l.world[boxY][boxX] == 0) {
-                for (int j = boxY - 1; j < boxY + 2; j++) {
-                    for (int k = boxX - 1; k < boxX + 2; k++) {
-                        l.world[j][k] = 1;
-                    }
-                }
+                IntStream.range(boxY - 1, boxY + 2).forEach(j ->
+                    IntStream.range(boxX - 1, boxX + 2).forEach(k -> l.world[j][k] = 1)
+                );
                 l.world[boxY][boxX] = 4;
             }
-        }
+        });
         return l;
     }
     
-    Level generateHouse(Level l){ // Haus / Land
+    Level generateHouse(Level l) { // Haus / Land
         Random rand = new Random();
         int houseX = rand.nextInt(19) + 1;
         int houseY = rand.nextInt(11) + 1;
-        for (int i = houseY - 1; i < houseY + 2; i++) {
-            for (int j = houseX - 1; j < houseX + 2; j++) {
+        IntStream.range(houseY - 1, houseY + 2).forEach(i ->
+            IntStream.range(houseX - 1, houseX + 2).forEach(j -> {
                 if (l.world[i][j] != 7) {
                     l.world[i][j] = 1;
                 }
-            }
-        }
+            })
+        );
         l.world[houseY][houseX] = 8;
         return l;
     }
     
-    Level generateShells(Level l){ // Muscheln / Land
+    Level generateShells(Level l) { // Muscheln / Land
         Random rand = new Random();
-        int shellCount = rand.nextInt(5) + 1; 
-        for (int i = 0; i < shellCount; i++) {
+        int shellCount = rand.nextInt(5) + 1;
+        IntStream.range(0, shellCount).forEach(i -> {
             int shellX = rand.nextInt(19) + 1;
             int shellY = rand.nextInt(11) + 1;
             if (l.world[shellY][shellX] == 0) {
-                for (int j = shellY - 1; j < shellY + 2; j++) {
-                    for (int k = shellX - 1; k < shellX + 2; k++) {
+                IntStream.range(shellY - 1, shellY + 2).forEach(j ->
+                    IntStream.range(shellX - 1, shellX + 2).forEach(k -> {
                         if (l.world[j][k] != 7) {
                             l.world[j][k] = 1;
                         }
-                    }
-                } l.world[shellY][shellX] = 6;
+                    })
+                );
+                l.world[shellY][shellX] = 6;
             }
-        }
+        });
         return l;
     }
-
-    Level generateSand(Level l){ // Bisschen Land verteilen
+    
+    Level generateSand(Level l) { // Bisschen Land verteilen
         Random rand = new Random();
-        for (int i = 1; i < 13; i++) {
-            for (int j = 1; j < 21; j++) {
+        IntStream.range(1, 13).forEach(i ->
+            IntStream.range(1, 21).forEach(j -> {
                 if (l.world[i][j] == 0) {
                     l.world[i][j] = rand.nextInt(2);
                 }
-            }
-        }
+            })
+        );
         return l;
     }
-
-    Level generateWater(Level l){ // Wasser um das Spielfeld
-        for (int i = 0; i < 14; i++) {
-            for (int j = 0; j < 22; j++) {
+    
+    Level generateWater(Level l) { // Wasser um das Spielfeld
+        IntStream.range(0, 14).forEach(i ->
+            IntStream.range(0, 22).forEach(j -> {
                 if (i == 0 || i == 13 || j == 0 || j == 21) {
                     l.world[i][j] = 0;
                 }
-            }
-        }
+            })
+        );
         return l;
     }
-
-    Level generateObstacles(Level l){ // Hindernisse generieren
+    
+    Level generateObstacles(Level l) { // Hindernisse generieren
         Random rand = new Random();
         int obstacleCount = rand.nextInt(5) + 1;
-        for (int i = 0; i < obstacleCount; i++) {
+        IntStream.range(0, obstacleCount).forEach(i -> {
             int obstacleX = rand.nextInt(19) + 1;
             int obstacleY = rand.nextInt(11) + 1;
             if (l.world[obstacleY][obstacleX] == 0) {
                 int sprite = rand.nextInt(2);
-                if (sprite == 0) {
-                    l.world[obstacleY][obstacleX] = 2;
-                } else l.world[obstacleY][obstacleX] = 3;
+                l.world[obstacleY][obstacleX] = (sprite == 0) ? 2 : 3;
             }
-        }
+        });
         return l;
     }
 

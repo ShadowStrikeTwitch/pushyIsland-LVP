@@ -161,10 +161,10 @@ others -> "❌";      // Fehler (Falsche Zahl)
 | Name | Moves ges.|
 | ----------- | ----------- |
 | Leon | 558 |
-| Andrea | xxx |
 | Martin | 564 |
-| | |
-| | |
+| Andrea | 592 |
+| Name | xxx |
+| Name | xxx |
 
 ## Der Random Level Generator (Szenario 5.2)
 **Ein Random Level kann mithilfe des Befehls p.randomLevel() generiert werden. <br>
