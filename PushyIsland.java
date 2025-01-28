@@ -114,7 +114,6 @@ public class PushyIsland{
     // ------------------------- LEVEL LOGIK -------------------------
 
     Level loadLevel(int currentLevel) {
-        
         System.out.println("[PushyIsland] Level " + currentLevel + " wird geladen... \n");
         Level newLevel = new Level();
         Map<Integer, int[][]> levels = Map.of(
@@ -192,11 +191,14 @@ public class PushyIsland{
 
     void levelPassed(){ // Methode welche nach Levelabschluss ausgeführt wird // 6;
         if (gameRunning) {
-            if (currentLevel <= 10){
+            if (currentLevel < 10){
                 System.out.println("[PushyIsland] Level " + currentLevel + " wurde mit " + moveCount +  " Moves geschafft. \n");
                 moveStatics[currentLevel - 1] = moveCount; // Move Counter speichern
                 moveCount = 0;                             // Move Counter zurücksetzen
                 currentLevel++;                            // Derzeitiges Level erhöhen
+            } else if (currentLevel == 10){
+                currentLevel++;
+                gameWon();
             } else if (currentLevel == 50){
                 l = l.generate();                          // Random Level generieren
                 drawLevel(l);                   // Random Level generieren
