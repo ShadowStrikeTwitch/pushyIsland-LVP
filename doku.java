@@ -16,6 +16,9 @@ Dazu unten mehr.**
 
 ![Pushy](web/pushy-small.png)
 
+<br>
+<hr>
+
 ## Wie kann sich der Spieler bewegen? (Szenario 1)
 **Der Spieler bewegt sich innerhalb der einzelnen Kästchen fort, er kann sich nur auf dem Sand bewegen. <br>
 Die grünen Kästchen repräsentieren eine Anhöhung, auf die der Spieler nicht kommen kann. <br>
@@ -97,6 +100,9 @@ private void handleExecute(HttpExchange exchange) throws IOException {
 ![Bewegen Bild 1](web/level1-1.png)
 ![Bewegen Bild 2](web/level1-2.png)
 
+<br>
+<hr>
+
 ## Die Boxen verschieben? (Szenario 2/3)
 **Der Spieler ist so stark, dass er die auf der Insel rumliegenden Boxen verschieben kann. <br>
 Das Verschieben ermöglicht ihm das vorranschreiten im Level und letzendlich das abschließen. <br>
@@ -148,6 +154,9 @@ int newBoxPosY = object_posY, newBoxPosX = object_posX;
 ![Box ins Wasser Bild 2](web/level3-2.png)
 ![Box ins Wasser Bild 3](web/level3-3.png)
 
+<br>
+<hr>
+
 ## Alle Muscheln sammeln? (Szenario 4)
 **Die Muscheln wurden auf die Insel gespühlt, sie sind in den Leveln verteilt und müssen gesammelt werden. <br>
 Sollte der Spieler alle Muscheln gesammelt haben, dann darf er zum Ziel. <br>
@@ -158,21 +167,8 @@ Wenn der Spieler noch nicht alle gesammelt hat, wird er durch eine Nachricht dar
 <br>
 ![Muscheln nicht gesammelt](web/muscheln.png)
 
-## Das Level neustarten (Bonus)
-**Manchmal kann es passieren dass man sich Softlocked oder einfach nicht weiter weiß, 
-dafür gitb es die Möglichkeit des Level neuzustarten. <br>
-Mithilfe des Befehls p.restartLevel() oder der Taste "R" wird das aktuelle Level neugestartet. <br>
-Das funktioniert, da ich die standart Level abgespeichert habe, sollte der Spieler das veränderte Level nicht schaffen, lade ich das Level neu.** <br>
-```java 
-void resetLevel() { // Methode um das derzeitiges Level zurücksetzen // 5;
-        if (gameRunning) {
-            System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurückgesetzt.");
-            moveCount = 0;                         // Move Counter zurücksetzen
-            l = loadLevel(currentLevel);           // Aktualisieren der vorhandenen Level-Instanz
-            drawLevel(l);                          // Level anzeigen
-        } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet.");
-    }
-```
+<br>
+<hr>
 
 ## Eigene Level erstellen (Szenario 5.1)
 **Jeder kann kinderleicht ein eigenes Level erstellen, ich selbst habe 10 level erstellt, das hat wirklich Spaß gemacht. <br>
@@ -219,14 +215,8 @@ others -> "❌";      // Fehler (Falsche Zahl)
 <br> 
 ![Eigenes Level Bild 2](web/level-own-2.png)
 
-# Scoreboard
-| Name | Moves ges.|
-| ----------- | ----------- |
-| Leon | 558 |
-| Martin | 564 |
-| Andrea | 592 |
-| Name | xxx |
-| Name | xxx |
+<br>
+<hr>
 
 ## Der Random Level Generator (Szenario 5.2)
 **Ein Random Level kann mithilfe des Befehls p.randomLevel() generiert werden. <br>
@@ -274,8 +264,55 @@ Viel Spaß beim Spielen!**
         return l;
     }
 ```
-## Zwei Beispiele für zufällige Level:
+
+# Zwei Beispiele für zufällige Level:
 ![Random Level Bild 1](web/randomlevel-1.png)
 ![Random Level Bild 2](web/randomlevel-2.png)
 
+<br>
+<hr>
+
+## Das Level neustarten (Bonus)
+**Manchmal kann es passieren dass man sich Softlocked oder einfach nicht weiter weiß, 
+dafür gitb es die Möglichkeit des Level neuzustarten. <br>
+Mithilfe des Befehls p.restartLevel() oder der Taste "R" wird das aktuelle Level neugestartet. <br>
+Das funktioniert, da ich die standart Level abgespeichert habe, sollte der Spieler das veränderte Level nicht schaffen, lade ich das Level neu.** <br>
+```java 
+void resetLevel() { // Methode um das derzeitiges Level zurücksetzen // 5;
+        if (gameRunning) {
+            System.out.println("[PushyIsland] Kleinen Moment, das Level wird zurückgesetzt.");
+            moveCount = 0;                         // Move Counter zurücksetzen
+            l = loadLevel(currentLevel);           // Aktualisieren der vorhandenen Level-Instanz
+            drawLevel(l);                          // Level anzeigen
+        } else System.out.println("[PushyIsland] Das Spiel wurde noch nicht gestartet.");
+    }
+```
+
+<br>
+<hr>
+
+# Scoreboard (Bonus)
+| Name | Moves ges.|
+| ----------- | ----------- |
+| Leon | 558 |
+| Martin | 564 |
+| Andrea | 592 |
+| Name | xxx |
+| Name | xxx |
+
+# Gab es Programmiertechnische Herausforderungen?
+**Ja, zunächst die Erstellung des Spielfeldes, ich habe mehrere Methoden versucht und mich für ein Zweidimensionales Array entschieden. <br>
+Die Bewegung des Spielers war eine kleine Herausforderung, da ich auf Interaktion mit Objekten achtgeben musste und verschiedene Ausgänge programmiert habe. (Box/ Muscheln/ Hindernisse) <br>
+Die Interaktion mit den Boxen war eine Herausforderung, da ich darauf achten musste, dass sich vor der Box kein Hinderniss befindet. <br>
+Das Level neustarten hatte kleine Probleme, da ich das Level durch das Spielen verändere, das konnte ich aber mit einer Kopie gut lösen. <br>
+Random Level generieren war nicht so schwer wie gedacht, ich habe verschiedene Methoden verwendet, um ein Level zu generieren, welches wahrscheinlich lösbar ist. **
+
+# Fazit meines Projekts:
+**Ich habe sehr viel Spaß bei der Entwicklung von PushyIsland, meines Programmieren Projektes gehabt. <br>
+Es war für mich schon eine Herausforderung, den richtigen Ansatz und umsetzung zu finden. <br>
+Sehr stolz bin ich auf die Interaktion, Pushy über den Browser stuern zu können aber auch über die Jshell. <br>
+Ich habe viel über die Programmierung und das zusammenspiel der Klassen gelernt und bin stolz auf mein Ergebnis.**
+
+<br>
+<hr>
 """));
