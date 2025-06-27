@@ -4,30 +4,15 @@
 
 ## Deutsch
 
-### Erste Schritte
+### Wie zu verwenden
 
-Um dieses Projekt auszuführen und zu verwenden, befolge diese Schritte:
-
-1.  **Projekt öffnen:** Öffne das Projekt in deiner bevorzugten IDE oder deinem Code-Editor.
-2.  **Server starten:**
-    * Öffne ein Terminal im Stammverzeichnis des Projekts.
-    * Das Projekt sollte automatisch einen lokalen Server starten.
-3.  **Im Browser aufrufen:**
-    * Öffne deinen Webbrowser und navigiere zu `http://localhost:50001`.
-4.  **JShell verwenden (Optional):**
-    * Um mit dem Projekt über JShell zu interagieren, öffne ein Terminal und gib ein:
-        ```bash
-        jshell -R-ea
-        ```
-    * Innerhalb von JShell öffne die Datei `lvp.java`:
-        ```jshell
-        /open lvp.java
-        ```
-    * Öffne anschließend die Haupt-Dokumentations-/Startdatei (`doku.java`):
-        ```jshell
-        /open doku.java
-        ```
-        *Sollten Fehler auftreten, versuche erneut `/open doku.java` auszuführen.*
+* **Projekt öffnen:** Beginnen Sie damit, das Projekt in Ihrer bevorzugten Entwicklungsumgebung zu öffnen.
+* **Terminal starten:** Navigieren Sie anschließend zum Projektordner und starten Sie dort ein Terminal.
+* **Webseite aufrufen:** Öffnen Sie Ihren Browser und rufen Sie die Adresse **`http://localhost:50001`** auf, um die Anwendung zu starten.
+* **JShell öffnen:** Falls Sie JShell verwenden möchten, starten Sie es mit dem Befehl **`Jshell -R-ea`**.
+* **LVP laden:** Innerhalb von JShell öffnen Sie die Datei für die Laborvorbereitung (**`lvp.java`**) mit **`/open lvp.java`**.
+* **Doku/Start-Datei laden:** Danach laden Sie die Dokumentation bzw. die Startdatei (**`daku.java`**) mit **`/open daku.java`**.
+    * Sollten dabei Fehler auftreten, versuchen Sie bitte erneut, **`/open doku.java`** auszuführen.
 
 ---
 
@@ -37,31 +22,16 @@ Viel Spaß mit dem Projekt!
 
 ## English
 
-### Getting Started
+### How to Use
 
-To run and use this project, follow these steps:
-
-1.  **Open the Project:** Open the project in your preferred IDE or code editor.
-2.  **Start the Server:**
-    * Open a terminal in the root directory of the project.
-    * The project should automatically start a local server.
-3.  **Access in Browser:**
-    * Open your web browser and navigate to `http://localhost:50001`.
-4.  **Use JShell (Optional):**
-    * To interact with the project via JShell, open a terminal and run:
-        ```bash
-        jshell -R-ea
-        ```
-    * Inside JShell, open the `lvp.java` file:
-        ```jshell
-        /open lvp.java
-        ```
-    * Then, open the main documentation/start file (`doku.java`):
-        ```jshell
-        /open doku.java
-        ```
-        *If you encounter errors, try running `/open doku.java` again.*
+* **Open the Project:** Start by opening the project in your development environment.
+* **Start Terminal:** Navigate to the project folder and launch a terminal there.
+* **Access Webpage:** Open your browser and go to **`http://localhost:50001`** to access the application.
+* **Open JShell:** If you wish to use JShell, launch it with the command **`Jshell -R-ea`**.
+* **Load LVP:** Inside JShell, open the lab preparation file (**`lvp.java`**) using **`/open lvp.java`**.
+* **Load Documentation/Start File:** Subsequently, load the documentation or the start file (**`daku.java`**) with **`/open daku.java`**.
+    * Should any errors occur, please try running **`/open doku.java`** again.
 
 ---
 
-Enjoy using the project!
+Have fun!
